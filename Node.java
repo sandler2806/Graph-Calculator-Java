@@ -1,7 +1,6 @@
 import api.GeoLocation;
 import api.NodeData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Node implements NodeData {

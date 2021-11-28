@@ -11,9 +11,8 @@ import java.util.Map;
 
 public class Digraph implements DirectedWeightedGraph {
 
-//    ArrayList<HashMap<Integer, Edge>>  adjList = new ArrayList<>();
+
     HashMap<Integer, Node>  nodes = new HashMap<>();
-//    ArrayList<NodeData> nodes=new ArrayList<>();
     int size;
 
     public Digraph() throws IOException {
@@ -29,7 +28,7 @@ public class Digraph implements DirectedWeightedGraph {
             Location l=new Location(""+x.get("pos"));
             Node node=new Node(id,l);
             nodes.put(id,node);
-//            adjList.add(new HashMap<Integer,Edge>());
+
         }
         for (Map<String,?> x:map.get("Edges")){
 
