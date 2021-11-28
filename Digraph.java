@@ -11,8 +11,9 @@ import java.util.Map;
 
 public class Digraph implements DirectedWeightedGraph {
 
-    ArrayList<HashMap<String, Edge>>  adjList = new ArrayList<>();
-    ArrayList<Node> nodes=new ArrayList<>();
+    ArrayList<HashMap<Integer, Edge>>  adjList = new ArrayList<>();
+    ArrayList<NodeData> nodes=new ArrayList<>();
+    int size;
 
     public Digraph() throws IOException {
 
@@ -21,11 +22,12 @@ public class Digraph implements DirectedWeightedGraph {
 
 
         Map<String,ArrayList<Map<String,?>>> map= g.fromJson(new FileReader(path), Map.class);
+        size=map.get("Edges").size();
         for (Map<String,?> x:map.get("Nodes")){
             Location l=new Location(""+x.get("pos"));
             Node node=new Node(((Double)x.get("id")).intValue(),l);
             nodes.add(node);
-            adjList.add(new HashMap<String,Edge>());
+            adjList.add(new HashMap<Integer,Edge>());
         }
         for (Map<String,?> x:map.get("Edges")){
 
@@ -34,7 +36,7 @@ public class Digraph implements DirectedWeightedGraph {
             double w= (Double) x.get("w");
 
             Edge edge=new Edge(src,w,dest);
-            adjList.get(src).put(""+dest,edge);
+            adjList.get(src).put(dest,edge);
 
         }
     }
@@ -47,22 +49,29 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData getNode(int key) {
-        return nodes.get(key);
+        if(key<nodes.size())
+            return nodes.get(key);
+        else
+            return null;
     }
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return null;
+        return adjList.get(src).getOrDefault(dest, null);
     }
 
     @Override
     public void addNode(NodeData n) {
-
+        nodes.add(n);
+        adjList.add(new HashMap<Integer,Edge>());
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-
+        if(!adjList.get(src).containsKey(dest)){
+            adjList.get(src).put(dest,new Edge(src,w,dest));
+            size++;
+        }
     }
 
     @Override
@@ -82,22 +91,32 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
+
+//        if(adjList)
         return null;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+
+        if(adjList.get(src).containsKey(dest)){
+            Edge edge=adjList.get(src).get(dest);
+            adjList.get(src).remove(dest);
+            size--;
+            return edge;
+        }
+        else
+            return null;
     }
 
     @Override
     public int nodeSize() {
-        return 0;
+        return nodes.size();
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        return size;
     }
 
     @Override
