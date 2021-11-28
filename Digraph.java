@@ -15,9 +15,9 @@ public class Digraph implements DirectedWeightedGraph {
     HashMap<Integer, Node>  nodes = new HashMap<>();
     int size;
 
-    public Digraph() throws IOException {
+    public Digraph(String path) throws IOException {
 
-        String path = "data/G1.json";
+//        String path = "data/G1.json";
         Gson g = new Gson();
 
 
@@ -44,7 +44,7 @@ public class Digraph implements DirectedWeightedGraph {
 
     public static void main(String[] args) throws IOException {
 
-        Digraph g = new Digraph();
+//        Digraph g = new Digraph("data/G1.json");
     }
 
     @Override

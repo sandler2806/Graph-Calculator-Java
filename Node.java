@@ -6,11 +6,11 @@ import java.util.HashMap;
 public class Node implements NodeData {
 
     private int id;
-    private GeoLocation pos;
+    private Location pos;
     private int tag;
     private HashMap<Integer, Edge>  adjList;
 
-    public Node(int id, GeoLocation gl){
+    public Node(int id, Location gl){
 
         this.id = id;
         pos = gl;
@@ -57,7 +57,7 @@ public class Node implements NodeData {
 
     @Override
     public void setLocation(GeoLocation p) {
-        pos = p;
+        pos = (Location) p;
     }
 
     @Override
