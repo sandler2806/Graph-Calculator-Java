@@ -1,17 +1,47 @@
 import api.GeoLocation;
 import api.NodeData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Node implements NodeData {
 
     private int id;
     private GeoLocation pos;
     private int tag;
+    private HashMap<Integer, Edge>  adjList;
 
     public Node(int id, GeoLocation gl){
 
         this.id = id;
         pos = gl;
+        adjList=new HashMap<>();
 
+    }
+
+
+
+    public void addEdge(Edge edge) {
+        adjList.put(edge.dest,edge);
+    }
+
+    public Edge removeEdge(int dest) {
+
+        if(adjList.containsKey(dest)){
+            Edge edge=adjList.get(dest);
+            adjList.remove(dest);
+            return edge;
+        }
+        else
+            return null;
+    }
+
+    public Edge getEdge(int dest) {
+        return adjList.getOrDefault(dest, null);
+    }
+
+    public boolean containEdge(int dest) {
+        return adjList.containsKey(dest);
     }
 
 
