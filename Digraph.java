@@ -11,25 +11,37 @@ import java.util.Map;
 
 public class Digraph implements DirectedWeightedGraph {
 
+    static class container{
+        NodeData node;
+        HashMap<Integer,EdgeData> edges;
 
-    HashMap<Integer, Node>  nodes = new HashMap<>();
-    int size;
+        container(NodeData n){node = n;
+        edges = new HashMap<>();
+        }
+    }
+
+
+//    HashMap<Integer, Node>  nodes = new HashMap<>();
+    HashMap<Integer,container> adjList;
+    int edgeNum; // nu
 
     public Digraph(String path) throws IOException {
+        adjList = new HashMap<>();
 
-//        String path = "data/G1.json";
         Gson g = new Gson();
-
-
+        //read the json file into map
         Map<String,ArrayList<Map<String,?>>> map= g.fromJson(new FileReader(path), Map.class);
-        size=map.get("Edges").size();
+        edgeNum=map.get("Edges").size();
+
+        //insert the nodes to the hashmap
         for (Map<String,?> x:map.get("Nodes")){
             int id=((Double)x.get("id")).intValue();
             Location l=new Location(""+x.get("pos"));
             Node node=new Node(id,l);
-            nodes.put(id,node);
+            adjList.put(id,new container(node));
 
         }
+        //insert the edges
         for (Map<String,?> x:map.get("Edges")){
 
             int src=((Double)x.get("src")).intValue();
@@ -37,79 +49,88 @@ public class Digraph implements DirectedWeightedGraph {
             double w= (Double) x.get("w");
 
             Edge edge=new Edge(src,w,dest);
-            nodes.get(src).addEdge(edge);
+            adjList.get(src).edges.put(dest,edge);
 
         }
+
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
 
 //        Digraph g = new Digraph("data/G1.json");
+//        System.out.println("");
     }
 
     @Override
     public NodeData getNode(int key) {
-        if(key<nodes.size())
-            return nodes.get(key);
-        else
-            return null;
+            return adjList.get(key).node;
     }
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return nodes.get(src).getEdge(dest);
+        return adjList.get(src).edges.get(dest);
     }
 
     @Override
     public void addNode(NodeData n) {
-        nodes.put(n.getKey(), (Node) n);
+        adjList.put(n.getKey(),new container(n));
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-        nodes.get(src).addEdge(new Edge(src,w,dest));
-        size++;
+        adjList.get(src).edges.put(dest, new Edge(src, w, dest));
+        edgeNum++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+
+        ArrayList<NodeData> nodes = new ArrayList<>();
+        for(container c : adjList.values())
+            nodes.add(c.node);
+
+        return nodes.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        ArrayList<EdgeData> edges = new ArrayList<>();
+        for (container c : adjList.values())
+            edges.addAll(c.edges.values());
+
+        return edges.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+
+        return adjList.get(node_id).edges.values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
 
-//        if(adjList)
         return null;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
 
-        Edge d = nodes.get(src).removeEdge(dest) ;
+        EdgeData d = adjList.get(src).edges.remove(dest) ;
         if(d!=null)
-            size--;
+            edgeNum--;
+
         return d;
     }
 
     @Override
     public int nodeSize() {
-        return nodes.size();
+        return adjList.size();
     }
 
     @Override
     public int edgeSize() {
-        return size;
+        return edgeNum;
     }
 
     @Override
