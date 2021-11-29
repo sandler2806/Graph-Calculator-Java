@@ -46,13 +46,23 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
         NodeData src=iterator.next();
         HashMap<Integer,Double> distance=bfs(graph,src);
         if(distance.containsValue(Double.MAX_VALUE))return false;
-        DirectedWeightedGraph r=reverse(graph);
-        return true;
+        DirectedWeightedGraph reverse=reverse(graph);
+        distance=bfs(reverse,src);
+        return !distance.containsValue(Double.MAX_VALUE);
     }
-
-    private DirectedWeightedGraph reverse(DirectedWeightedGraph graph) {
-        return null;
-
+    private DirectedWeightedGraph reverse(DirectedWeightedGraph g){
+        DirectedWeightedGraph r=new Digraph();
+        Iterator<NodeData> nodeDataIterator=g.nodeIter();
+        while (nodeDataIterator.hasNext()){
+            NodeData nodeData=nodeDataIterator.next();
+            r.addNode(nodeData);
+        }
+        Iterator<EdgeData> edgeDataIterator=g.edgeIter();
+        while (edgeDataIterator.hasNext()){
+            EdgeData edgeData=edgeDataIterator.next();
+            r.connect(edgeData.getDest(),edgeData.getSrc(),edgeData.getWeight());
+        }
+        return r;
     }
 
     private HashMap<Integer,Double> bfs(DirectedWeightedGraph g,NodeData src){

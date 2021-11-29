@@ -25,6 +25,11 @@ public class Digraph implements DirectedWeightedGraph {
     HashMap<Integer,container> adjList;
     int edgeNum; // nu
 
+    //empty constructor
+    public Digraph(){
+        adjList=new HashMap<>();
+    }
+
     public Digraph(String path) throws IOException {
         adjList = new HashMap<>();
 
