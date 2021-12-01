@@ -12,6 +12,12 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     DirectedWeightedGraph graph;
     final int WHITE=0,GRAY=1,BLACK=2;
 
+    class temp1 {
+        double dist;
+        ArrayList<NodeData> path;
+    }
+
+
     public static void main(String[] args) throws IOException {
 
 
@@ -124,7 +130,6 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     public NodeData center() {
         return null;
     }
-
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         return null;
@@ -139,4 +144,11 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     public boolean load(String file) {
         return false;
     }
+
+    HashMap<Integer, temp1> dijkstra(int src){
+
+        HashMap<Integer, temp1> distMap;
+
+    }
+
 }
