@@ -17,6 +17,13 @@ public class Node implements NodeData {
 
     }
 
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id=" + id +
+                '}';
+    }
+
 
 
     @Override

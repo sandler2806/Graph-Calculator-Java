@@ -106,22 +106,24 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        double[][]distance=dijkstra(src);
-        return distance[0][dest];
+        HashMap<Integer,Double>[]dijkstra=dijkstra(src);
+        HashMap<Integer,Double>distance =dijkstra[0];
+        return distance.get(dest);
     }
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
 
         ArrayList<NodeData>ans=new ArrayList<>();
-        double[][]path=dijkstra(src);
+        HashMap<Integer,Double>[]dijkstra=dijkstra(src);
+        HashMap<Integer,Double>path =dijkstra[1];
         ans.add(graph.getNode(dest));
-        double node=path[1][dest];
+        double node=path.get(dest);
         while (node!=src){
             ans.add(0,graph.getNode((int)node));
-            node=path[1][(int)node];
+            node=path.get((int)node);
         }
-        ans.add(graph.getNode(src));
+        ans.add(0,graph.getNode(src));
         return ans;
     }
 
@@ -132,9 +134,14 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
         Iterator<NodeData> nodeDataIterator=graph.nodeIter();
         while (nodeDataIterator.hasNext()){
             NodeData node=nodeDataIterator.next();
-            double[][]distance=dijkstra(node.getKey());
-            Arrays.sort(distance[0]);
-            eccentricity.put(node.getKey(),distance[0][distance[0].length-1]);
+            HashMap<Integer,Double>[]dijkstra=dijkstra(node.getKey());
+            HashMap<Integer,Double> distance=dijkstra[0];
+
+            double max=Double.MIN_VALUE;
+            for(int i:distance.keySet()){
+                if(distance.get(i)>max)max=distance.get(i);
+            }
+            eccentricity.put(node.getKey(),max);
         }
         double minEccentricity=Double.MAX_VALUE;
         int index=0;
@@ -163,33 +170,27 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
         return false;
     }
 
-    double[][] dijkstra(int src){
+    public HashMap<Integer,Double>[] dijkstra(int src){
 
-        //creating a set with all the nodes
         Set<NodeData> vertexes = new HashSet<>();
         Iterator<NodeData> it = graph.nodeIter();
-        int maxId = Integer.MIN_VALUE;
+        HashMap<Integer,Double>dist=new HashMap<>();
+        HashMap<Integer,Double>prev=new HashMap<>();
 
         while (it.hasNext()){
             NodeData temp = it.next();
             vertexes.add(temp);
-            maxId = Math.max(temp.getKey(), maxId);
+            dist.put(temp.getKey(),Double.MAX_VALUE);
+            prev.put(temp.getKey(),(double)temp.getKey());
         }
 
-        //creating 2D array to hold the distances( array[0]) and parents (array[1])
-        double[][] mat = new double[2][maxId + 1];
-        double[] dist = mat[0];
-        double[] prev = mat[1];
-
-        //instantiate the distance array with infinity
-        Arrays.fill(dist, Double.MAX_VALUE);
-
-        dist[src] = 0;
+        dist.replace(src,0.0);
 
         while (!vertexes.isEmpty()){
             //removing the node with the smallest distance
-            NodeData min = graph.getNode(getMin(dist));
-            vertexes.remove(min);
+            int a=getMin(vertexes,dist);
+            NodeData min = graph.getNode(getMin(vertexes,dist));
+            vertexes.remove(graph.getNode(min.getKey()));
 
             Iterator<EdgeData> minNeighbors = graph.edgeIter(min.getKey());
 
@@ -199,32 +200,33 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
                 if(!vertexes.contains(nei))
                     continue;
 
-                double tempDist = dist[min.getKey()] + graph.getEdge(min.getKey(), nei.getKey()).getWeight();
-                if(tempDist < dist[nei.getKey()]){
-                    dist[nei.getKey()] = tempDist;
-                    prev[nei.getKey()] = min.getKey();
+                double tempDist = dist.get(min.getKey()) + graph.getEdge(min.getKey(), nei.getKey()).getWeight();
+                if(tempDist < dist.get(nei.getKey())){
+                    dist.replace(nei.getKey(),tempDist);
+                    prev.replace(nei.getKey(),(double)min.getKey());
                 }
 
             }
 
         }
-
-        return mat;
+        int[]a=new int[2];
+        HashMap<Integer,Double>[]ans=new HashMap[2];
+        ans[0]=dist;
+        ans[1]=prev;
+        return ans;
     }
 
     //return the index of the min value in array
-    int getMin(double[] arr){
+    int getMin(Set<NodeData> s, HashMap<Integer,Double> dist){
 
-        double min = Double.MIN_VALUE;
+        double min = Double.MAX_VALUE;
         int index = 0;
-        for (int i = 0; i < arr.length; i++){
-
-            if (arr[i] < min){
-                min = arr[i];
-                index = i;
+        for (NodeData nodeData:s){
+            if(dist.get(nodeData.getKey())<min){
+                min = dist.get(nodeData.getKey());
+                index=nodeData.getKey();
             }
         }
-
         return index;
     }
 

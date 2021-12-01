@@ -15,12 +15,14 @@ public class Digraph implements DirectedWeightedGraph {
 
     static class container{
         NodeData node;
-        HashMap<Integer,EdgeData> edges;
+        HashMap<Integer,EdgeData> outEdges,inEdges;
 
         container(NodeData n){node = n;
-        edges = new HashMap<>();
+        outEdges = new HashMap<>();
+        inEdges = new HashMap<>();
         }
     }
+    boolean isIterator = false;
 
 
 //    HashMap<Integer, imp.Node>  nodes = new HashMap<>();
@@ -56,7 +58,11 @@ public class Digraph implements DirectedWeightedGraph {
             double w= (Double) x.get("w");
 
             Edge edge=new Edge(src,w,dest);
-            adjList.get(src).edges.put(dest,edge);
+            //add to source node
+            adjList.get(src).outEdges.put(dest,edge);
+            //add to the destination node
+            adjList.get(dest).inEdges.put(src,edge);
+
 
         }
 
@@ -70,12 +76,18 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData getNode(int key) {
-            return adjList.get(key).node;
+        if(adjList.get(key) == null)
+            return null;
+
+        return adjList.get(key).node;
     }
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return adjList.get(src).edges.get(dest);
+        if(adjList.get(src) == null)
+            return null;
+
+        return adjList.get(src).outEdges.get(dest);
     }
 
     @Override
@@ -85,7 +97,7 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public void connect(int src, int dest, double w) {
-        adjList.get(src).edges.put(dest, new Edge(src, w, dest));
+        adjList.get(src).outEdges.put(dest, new Edge(src, w, dest));
         edgeNum++;
     }
 
@@ -101,29 +113,43 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        ArrayList<EdgeData> edges = new ArrayList<>();
+        ArrayList<EdgeData> outEdges = new ArrayList<>();
         for (container c : adjList.values())
-            edges.addAll(c.edges.values());
+            outEdges.addAll(c.outEdges.values());
 
-        return edges.iterator();
+        return outEdges.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
 
-        return adjList.get(node_id).edges.values().iterator();
+        return adjList.get(node_id).outEdges.values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
 
+        //       int[] in = new int[adjList.get(key).inEdges.size()];
+
+        //remove the out edges
+        ArrayList<Integer> out = new ArrayList<>(adjList.get(key).outEdges.keySet());
+        ArrayList<Integer> in = new ArrayList<>(adjList.get(key).inEdges.keySet());
+
+        for (int i: out)
+            removeEdge(key,i);
+        for (int i: in)
+            removeEdge(i,key);
+        //remove in edges
+
+        adjList.remove(key);
         return null;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
 
-        EdgeData d = adjList.get(src).edges.remove(dest) ;
+        EdgeData d = adjList.get(src).outEdges.remove(dest) ;
+        adjList.get(dest).inEdges.remove(src);
         if(d!=null)
             edgeNum--;
 
