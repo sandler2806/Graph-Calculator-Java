@@ -1,7 +1,7 @@
+package imp;
+
 import api.GeoLocation;
 import api.NodeData;
-
-import java.util.HashMap;
 
 public class Node implements NodeData {
 

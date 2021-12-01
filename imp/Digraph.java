@@ -1,3 +1,5 @@
+package imp;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
@@ -21,7 +23,7 @@ public class Digraph implements DirectedWeightedGraph {
     }
 
 
-//    HashMap<Integer, Node>  nodes = new HashMap<>();
+//    HashMap<Integer, imp.Node>  nodes = new HashMap<>();
     HashMap<Integer,container> adjList;
     int edgeNum; // nu
 
@@ -62,7 +64,7 @@ public class Digraph implements DirectedWeightedGraph {
 
     public static void main(String[] args)  {
 
-//        Digraph g = new Digraph("data/G1.json");
+//        imp.Digraph g = new imp.Digraph("data/G1.json");
 //        System.out.println("");
     }
 

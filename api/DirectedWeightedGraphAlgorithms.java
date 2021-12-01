@@ -1,7 +1,7 @@
 package api;
 import java.util.List;
 /**
- * This interface represents a Directed (positive) Weighted Graph Theory Algorithms including:
+ * This interface represents a Directed (positive) Weighted Graph Theory imp.Algorithms including:
  * 0. clone(); (copy)
  * 1. init(graph);
  * 2. isConnected(); // strongly (all ordered pais connected)
@@ -63,7 +63,7 @@ public interface DirectedWeightedGraphAlgorithms {
     /**
      * Finds the NodeData which minimizes the max distance to all the other nodes.
      * Assuming the graph isConnected, elese return null. See: https://en.wikipedia.org/wiki/Graph_center
-     * @return the Node data to which the max shortest path to all the other nodes is minimized.
+     * @return the imp.Node data to which the max shortest path to all the other nodes is minimized.
      */
     public NodeData center();
    /**
