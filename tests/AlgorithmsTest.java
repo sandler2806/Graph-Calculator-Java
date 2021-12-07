@@ -3,14 +3,11 @@ package tests;
 import api.NodeData;
 import imp.Algorithms;
 import imp.Digraph;
-import imp.Node;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
