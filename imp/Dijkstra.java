@@ -1,7 +1,6 @@
 package imp;
 
 import api.DirectedWeightedGraph;
-import api.EdgeData;
 import api.NodeData;
 
 import java.io.IOException;
@@ -61,12 +60,12 @@ public class Dijkstra {
             Iterator<Edge> nei = graph.edgeIter(min.getValue());
             while(nei.hasNext()){
                 Edge e = nei.next();
-               double alt = dist.get(e.getSrc()) + e.getWeight();
-               if( alt < dist.get(e.getDest())){
-                   dist.put(e.getDest(), alt);
-                   prev.put(e.getDest(), (double) e.getSrc());
-                   que.decreaseKey(map.get(e.getDest()), alt);
-               }
+                double alt = dist.get(e.getSrc()) + e.getWeight();
+                if( alt < dist.get(e.getDest())){
+                    dist.put(e.getDest(), alt);
+                    prev.put(e.getDest(), (double) e.getSrc());
+                    que.decreaseKey(map.get(e.getDest()), alt);
+                }
             }
         }
         HashMap<Integer,Double>[] ans=new HashMap[2];
