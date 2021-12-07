@@ -35,6 +35,8 @@ public class Location implements GeoLocation {
     @Override
     public double distance(GeoLocation gl) {
 
-        return 0;
+        double x2 = gl.x(), y2 = gl.y();
+        return Math.sqrt(Math.pow(y - y2,2) + Math.pow(x - x2, 2));
+
     }
 }

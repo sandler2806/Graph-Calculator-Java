@@ -6,6 +6,7 @@ import api.EdgeData;
 import api.NodeData;
 import com.google.gson.Gson;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -212,12 +213,30 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean save(String file) {
-        return false;
+        Gson g = new Gson();
+        try {
+            g.toJson(graph, new FileWriter(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public boolean load(String file) {
-        return false;
+
+        Gson g = new Gson();
+        try {
+            DirectedWeightedGraph d =g.fromJson(file, DirectedWeightedGraph.class);
+            this.init(d);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }
