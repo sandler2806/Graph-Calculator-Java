@@ -15,10 +15,9 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-public class Window2 extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
+public class Window2 extends JFrame implements ActionListener {
     Algorithms algorithms=new Algorithms();
     double max_x=Double.MIN_VALUE,min_x=Double.MAX_VALUE,max_y=Double.MIN_VALUE,min_y=Double.MAX_VALUE;
     private final int kRADIUS = 3;
@@ -397,41 +396,56 @@ public class Window2 extends JFrame implements ActionListener, MouseListener, Mo
                 // "Switch" the old "canvas" for the new one
                 g.drawImage(mBuffer_image, 0, 0, this);
             }
+            case "tsp":{
+                JTextField nodes = new JTextField();
+                nodes.setPreferredSize(new Dimension(150, 25));
+                JLabel nodesLabel = new JLabel("nodes list:");
+                nodesLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+                JLabel exampleLabel = new JLabel("example:1,4,6,2,9");
+                exampleLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+
+                JButton okButton = new JButton("insert");
+                okButton.setFont(new Font("Serif", Font.PLAIN, 14));
+
+                container.add(srcLabel);
+                container.add(src);
+                container.add(destLabel);
+                container.add(dest);
+                container.add(okButton);
+                this.setVisible(true);
+
+                okButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int srcText = Integer.parseInt(src.getText());
+                        int destText = Integer.parseInt(dest.getText());
+                        List<NodeData>nodeDataList=algorithms.shortestPath(srcText,destText);
+                        mBuffer_image = createImage(mWin_w,mWin_h );
+                        mBuffer_graphics = mBuffer_image.getGraphics();
+                        Graphics g=getGraphics();
+                        // Draw on the new "canvas"
+                        paintComponents(mBuffer_graphics);
+                        mBuffer_graphics.setColor(Color.black);
+                        for (int i = 0; i <nodeDataList.size()-1; i++) {
+                            EdgeData edgeData=graph.getEdge(nodeDataList.get(i).getKey(),nodeDataList.get(i+1).getKey());
+                            double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x()-min_x)*(scalelog)+50+kRADIUS;
+                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y()-min_y)*(scalelat)+50+kRADIUS;
+                            double destX = (graph.getNode(edgeData.getDest()).getLocation().x()-min_x)*(scalelog)+50+kRADIUS;
+                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y()-min_y)*(scalelat)+50+kRADIUS;
+                            mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
+                        }
+                        container.removeAll();
+                        container.setLayout(new FlowLayout());
+                        // "Switch" the old "canvas" for the new one
+                        g.drawImage(mBuffer_image, 0, 0,imageObserver);
+                    }
+                });
+                break;
+
+            }
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("mouseClicked");
-    }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
 
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        System.out.println("mouseEntered");
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        System.out.println("mouseExited");
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent mouseEvent) {
-
-    }
 }
