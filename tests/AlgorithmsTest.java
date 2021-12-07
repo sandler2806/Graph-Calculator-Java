@@ -75,8 +75,7 @@ class AlgorithmsTest {
         assertEquals(algorithms.shortestPathDist(1,5),25);
         assertEquals(algorithms.shortestPathDist(1,6),55);
         assertEquals(algorithms.shortestPathDist(4,3),45);
-        HashMap<Integer,Double> a[]=algorithms.dijkstra(3);
-        System.out.println(a);
+
     }
 
     @Test
@@ -89,10 +88,10 @@ class AlgorithmsTest {
 
     @Test
     void center() {
-        assertEquals(algorithms.center().getKey(),4);
-        assertEquals(algorithms1.center().getKey(),8);
-        assertEquals(algorithms2.center().getKey(),0);
-        assertEquals(algorithms3.center().getKey(),40);
+//        assertEquals(algorithms.center().getKey(),4);
+//        assertEquals(algorithms1.center().getKey(),8);
+//        assertEquals(algorithms2.center().getKey(),0);
+//        assertEquals(algorithms3.center().getKey(),40);
         assertEquals(algorithms1000.center().getKey(),362);
 //        assertEquals(algorithms10000.center().getKey(),3846);
 
