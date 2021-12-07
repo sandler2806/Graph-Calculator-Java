@@ -14,10 +14,11 @@ import java.util.Map;
 public class Digraph implements DirectedWeightedGraph {
 
     static class container{
-        NodeData node;
-        HashMap<Integer,EdgeData> outEdges,inEdges;
+        Node node;
+        HashMap<Integer,Edge> outEdges,inEdges;
 
-        container(NodeData n){node = n;
+        container(NodeData n){
+            node = (Node) n;
         outEdges = new HashMap<>();
         inEdges = new HashMap<>();
         }
@@ -26,7 +27,7 @@ public class Digraph implements DirectedWeightedGraph {
 
 
 //    HashMap<Integer, imp.Node>  nodes = new HashMap<>();
-    HashMap<Integer,container> adjList;
+    private HashMap<Integer,container> adjList;
     int edgeNum; // nu
 
     //empty constructor
@@ -97,8 +98,12 @@ public class Digraph implements DirectedWeightedGraph {
 
     @Override
     public void connect(int src, int dest, double w) {
+        if(!adjList.containsKey(src) || !adjList.containsKey(dest))
+            return;
+
         adjList.get(src).outEdges.put(dest, new Edge(src, w, dest));
         edgeNum++;
+
     }
 
     @Override
@@ -121,7 +126,7 @@ public class Digraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<EdgeData> edgeIter(int node_id) {
+    public Iterator<Edge> edgeIter(int node_id) {
 
         return adjList.get(node_id).outEdges.values().iterator();
     }
@@ -170,4 +175,8 @@ public class Digraph implements DirectedWeightedGraph {
     public int getMC() {
         return 0;
     }
+
+    public HashMap<Integer,container> getAdjList(){return adjList;}
+
+
 }
