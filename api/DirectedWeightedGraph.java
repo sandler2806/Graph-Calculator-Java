@@ -1,4 +1,6 @@
 package api;
+import imp.Edge;
+
 import java.util.Iterator;
 /**
  * This interface represents a Directional Weighted Graph,
@@ -56,7 +58,7 @@ public interface DirectedWeightedGraph {
 	 * Note: if the graph was changed since the iterator was constructed - a RuntimeException should be thrown.
 	 * @return Iterator<EdgeData>
 	 */
-	public Iterator<EdgeData> edgeIter(int node_id);
+	public Iterator<Edge> edgeIter(int node_id);
 
 	/**
 	 * Deletes the node (with the given ID) from the graph -

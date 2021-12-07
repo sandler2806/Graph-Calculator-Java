@@ -87,7 +87,7 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
         while (!queue.isEmpty()){
             NodeData node=queue.poll();
-            Iterator<EdgeData> edgeDataIterator=g.edgeIter(node.getKey());
+            Iterator<Edge> edgeDataIterator=g.edgeIter(node.getKey());
             //iterate all his adj
             while (edgeDataIterator.hasNext()){
                 EdgeData edge=edgeDataIterator.next();
@@ -106,16 +106,17 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        HashMap<Integer,Double>[]dijkstra=dijkstra(src);
+        Dijkstra D = new Dijkstra(graph);
+        HashMap<Integer,Double>[]dijkstra=D.shp(src);
         HashMap<Integer,Double>distance =dijkstra[0];
         return distance.get(dest);
     }
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-
+        Dijkstra D = new Dijkstra(graph);
         ArrayList<NodeData>ans=new ArrayList<>();
-        HashMap<Integer,Double>[]dijkstra=dijkstra(src);
+        HashMap<Integer,Double>[]dijkstra=D.shp(src);
         HashMap<Integer,Double>path =dijkstra[1];
         ans.add(graph.getNode(dest));
         double node=path.get(dest);
@@ -132,9 +133,10 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
         HashMap<Integer,Double>eccentricity=new HashMap<>();
         Iterator<NodeData> nodeDataIterator=graph.nodeIter();
+        Dijkstra D = new Dijkstra(graph);
         while (nodeDataIterator.hasNext()){
             NodeData node=nodeDataIterator.next();
-            HashMap<Integer,Double>[]dijkstra=dijkstra(node.getKey());
+            HashMap<Integer,Double>[]dijkstra=D.shp(node.getKey());
             HashMap<Integer,Double> distance=dijkstra[0];
 
             double max=Double.MIN_VALUE;
@@ -157,7 +159,55 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        return null;
+        Dijkstra D = new Dijkstra(graph);
+        HashMap<Integer,NodeData>citiesMap=new HashMap<>();
+        List<NodeData>ans=new ArrayList<>();
+        for (NodeData nodeData:cities){
+            citiesMap.put(nodeData.getKey(),nodeData);
+        }
+        NodeData src=cities.get(0);
+        ans.add(src);
+        citiesMap.remove(src.getKey());
+        while (!citiesMap.isEmpty()){
+            Iterator<Edge> edgeDataIterator=graph.edgeIter(src.getKey());
+            NodeData minNei=null;
+            double minWeight=Double.MAX_VALUE;
+            while (edgeDataIterator.hasNext()){
+                EdgeData currentEdge=edgeDataIterator.next();
+                NodeData currentNode=graph.getNode(currentEdge.getDest());
+                if(citiesMap.containsKey(currentNode.getKey())&&currentEdge.getWeight()<minWeight){
+                    minWeight=currentEdge.getWeight();
+                    minNei=currentNode;
+                }
+            }
+            if(minNei!=null){
+                ans.add(minNei);
+                citiesMap.remove(minNei.getKey());
+                src=minNei;
+            }
+            else {
+                HashMap<Integer,Double>[]dijkstra=D.shp(src.getKey());
+                HashMap<Integer,Double> distance=dijkstra[0];
+                HashMap<Integer,Double> path=dijkstra[1];
+                for (NodeData nodeData:citiesMap.values()){
+                    if(distance.get(nodeData.getKey())<minWeight){
+                        minNei=nodeData;
+                        minWeight=distance.get(nodeData.getKey());
+                    }
+                }
+                ans.add(graph.getNode((minNei.getKey())));
+                citiesMap.remove(minNei.getKey());
+                double node=path.get((minNei.getKey()));
+                int size=ans.size()-1;
+                while (node!=src.getKey()){
+                    ans.add(size,graph.getNode((int)node));
+                    citiesMap.remove((int)node);
+                    node=path.get((int)node);
+                }
+                src=minNei;
+            }
+        }
+        return ans;
     }
 
     @Override
@@ -192,7 +242,7 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
             NodeData min = graph.getNode(getMin(vertexes,dist));
             vertexes.remove(graph.getNode(min.getKey()));
 
-            Iterator<EdgeData> minNeighbors = graph.edgeIter(min.getKey());
+            Iterator<Edge> minNeighbors = graph.edgeIter(min.getKey());
 
             while (minNeighbors.hasNext()){
 

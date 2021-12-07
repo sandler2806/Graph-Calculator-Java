@@ -4,6 +4,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 import imp.Digraph;
+import imp.Edge;
 import imp.Location;
 import imp.Node;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,7 +95,7 @@ class DigraphTest {
     @Test
     void testEdgeIter() {
 
-        Iterator<EdgeData> ed = graph.edgeIter(0);
+        Iterator<Edge> ed = graph.edgeIter(0);
 
         while(ed.hasNext()){
             EdgeData e = ed.next();
