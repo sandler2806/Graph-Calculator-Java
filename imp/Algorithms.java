@@ -133,7 +133,7 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public NodeData center() {
-
+        if(!isConnected())return null;
         HashMap<Integer,Double>eccentricity=new HashMap<>();
         Iterator<NodeData> nodeDataIterator=graph.nodeIter();
         Dijkstra D = new Dijkstra(graph);
@@ -162,55 +162,61 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+        HashMap<Integer,HashMap<Integer,Double>[]>dijkstraMap=new HashMap<>();
         Dijkstra D = new Dijkstra(graph);
+        double dist,minDist=Double.MAX_VALUE;
+        List<NodeData>minAns=new ArrayList<>();
         HashMap<Integer,NodeData>citiesMap=new HashMap<>();
-        List<NodeData>ans=new ArrayList<>();
-        for (NodeData nodeData:cities){
-            citiesMap.put(nodeData.getKey(),nodeData);
-        }
-        NodeData src=cities.get(0);
-        ans.add(src);
-        citiesMap.remove(src.getKey());
-        while (!citiesMap.isEmpty()){
-            Iterator<Edge> edgeDataIterator=graph.edgeIter(src.getKey());
-            NodeData minNei=null;
-            double minWeight=Double.MAX_VALUE;
-            while (edgeDataIterator.hasNext()){
-                EdgeData currentEdge=edgeDataIterator.next();
-                NodeData currentNode=graph.getNode(currentEdge.getDest());
-                if(citiesMap.containsKey(currentNode.getKey())&&currentEdge.getWeight()<minWeight){
-                    minWeight=currentEdge.getWeight();
-                    minNei=currentNode;
-                }
+
+        for (NodeData src:cities){
+
+            for (NodeData nodeData:cities){
+                citiesMap.put(nodeData.getKey(),nodeData);
             }
-            if(minNei!=null){
-                ans.add(minNei);
-                citiesMap.remove(minNei.getKey());
-                src=minNei;
-            }
-            else {
-                HashMap<Integer,Double>[]dijkstra=D.shp(src.getKey());
-                HashMap<Integer,Double> distance=dijkstra[0];
-                HashMap<Integer,Double> path=dijkstra[1];
-                for (NodeData nodeData:citiesMap.values()){
-                    if(distance.get(nodeData.getKey())<minWeight){
-                        minNei=nodeData;
-                        minWeight=distance.get(nodeData.getKey());
+            dist=0;
+            List<NodeData>ans=new ArrayList<>();
+            ans.add(src);
+            citiesMap.remove(src.getKey());
+            while (!citiesMap.isEmpty()){
+                NodeData minNei=null;
+                double minWeight=Double.MAX_VALUE;
+
+                    HashMap<Integer,Double>[]dijkstra;
+                    if(dijkstraMap.containsKey(src.getKey())){
+                        dijkstra=dijkstraMap.get(src.getKey());
                     }
-                }
-                ans.add(graph.getNode((minNei.getKey())));
-                citiesMap.remove(minNei.getKey());
-                double node=path.get((minNei.getKey()));
-                int size=ans.size()-1;
-                while (node!=src.getKey()){
-                    ans.add(size,graph.getNode((int)node));
-                    citiesMap.remove((int)node);
-                    node=path.get((int)node);
-                }
-                src=minNei;
+                    else {
+                        dijkstra=D.shp(src.getKey());
+                        dijkstraMap.put(src.getKey(),dijkstra);
+                    }
+                    HashMap<Integer,Double> distance=dijkstra[0];
+                    HashMap<Integer,Double> path=dijkstra[1];
+                    for (NodeData nodeData:citiesMap.values()){
+                        if(distance.get(nodeData.getKey())<minWeight){
+                            minNei=nodeData;
+                            minWeight=distance.get(nodeData.getKey());
+                        }
+                    }
+                    dist+=distance.get(minNei.getKey());
+                    ans.add(graph.getNode((minNei.getKey())));
+                    citiesMap.remove(minNei.getKey());
+                    double node=path.get((minNei.getKey()));
+                    int size=ans.size()-1;
+                    while (node!=src.getKey()){
+                        ans.add(size,graph.getNode((int)node));
+                        citiesMap.remove((int)node);
+                        node=path.get((int)node);
+                    }
+                    src=minNei;
+
+            }
+            if(dist<minDist){
+                minAns=ans;
+                minDist=dist;
             }
         }
-        return ans;
+
+        return minAns;
     }
 
     @Override

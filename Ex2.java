@@ -42,6 +42,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) throws IOException {
-        runGUI("data/G1.json");
+        runGUI(args[0]);
     }
 }
