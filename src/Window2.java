@@ -12,6 +12,7 @@ import imp.Node;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Window2 extends JFrame implements ActionListener {
     private Image mBuffer_image;
     private Graphics mBuffer_graphics;
     double scalelog,scalelat;
+    private final int ARR_SIZE = 4;
 
 
     public Window2(DirectedWeightedGraphAlgorithms alg) {
@@ -50,11 +52,11 @@ public class Window2 extends JFrame implements ActionListener {
 
         MenuBar menuBar = new MenuBar();
         this.setMenuBar(menuBar);
-        Menu menu = new Menu("Menu");
+        Menu menu = new Menu("File");
         menuBar.add(menu);
         Menu edit = new Menu("Edit");
         menuBar.add(edit);
-        Menu algorithms = new Menu("Algorithms");
+        Menu algorithms = new Menu("Operations");
         menuBar.add(algorithms);
 
         MenuItem save = new MenuItem("save");
@@ -98,10 +100,6 @@ public class Window2 extends JFrame implements ActionListener {
         algorithms.add(shortestPath);
         algorithms.add(center);
         algorithms.add(tsp);
-//        mBuffer_image = createImage(mWin_w, mWin_h);
-//
-//        paint(this.getGraphics());
-//        showGraph();
     }
 
     @Override
@@ -138,12 +136,27 @@ public class Window2 extends JFrame implements ActionListener {
             double destX = (graph.getNode(edgeData.getDest()).getLocation().x()-min_x)*(scalelog)+50+kRADIUS;
             double destY = (graph.getNode(edgeData.getDest()).getLocation().y()-min_y)*(scalelat)+50+kRADIUS;
             g.setColor(Color.RED);
-            g.drawLine((int) srcX, (int) srcY,
-                    (int) destX, (int) destY);
+            g.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
 
-//            g.drawString(String.format("%.2f", edgeData.getWeight()),
-//                    (int) ((srcX + destX) / 2),
-//                    (int) ((srcY +destY) / 2));
+//            Graphics2D g2 = (Graphics2D) g.create();
+//            double dx = srcX - destX, dy = srcY - destY;
+//            double angle = Math.atan2(dy, dx);
+//            int len = (int) Math.sqrt(dx*dx + dy*dy);
+//            AffineTransform at = AffineTransform.getTranslateInstance(srcX, srcY);
+//            at.concatenate(AffineTransform.getRotateInstance(angle));
+//            g2.transform(at);
+//
+//            // Draw horizontal arrow starting in (0, 0)
+//            g2.drawLine((int)srcX, (int)srcY, len, (int)destY);
+//            g2.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+//                    new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+
+//            drawArrowLine(g,(int)srcX,(int)srcY,(int)destX,(int)destY,5,5);
+
+
+//            for (int x = 15; x < 200; x += 16)
+//                drawArrow(g, x, x, x, 150);
+//            drawArrow(g, 30, 300, 300, 190);
         }
     }
 
@@ -521,6 +534,35 @@ public class Window2 extends JFrame implements ActionListener {
             super(str);
             this.setFont(new Font("Serif", Font.PLAIN, 14));
         }
+    }
+    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+        int dx = x2 - x1, dy = y2 - y1;
+        double D = Math.sqrt(dx * dx + dy * dy);
+        double xm = D - d, xn = xm, ym = h, yn = -h, x;
+        double sin = dy / D, cos = dx / D;
+
+        x = xm * cos - ym * sin + x1;
+        ym = xm * sin + ym * cos + y1;
+        xm = x;
+
+        x = xn * cos - yn * sin + x1;
+        yn = xn * sin + yn * cos + y1;
+        xn = x;
+
+        int[] xpoints = {
+                x2,
+                (int) xm,
+                (int) xn
+        };
+        int[] ypoints = {
+                y2,
+                (int) ym,
+                (int) yn
+        };
+        g.drawLine(x1, y1, x2, y2);
+        g.setColor(Color.black);
+        g.drawPolygon(xpoints, ypoints, 3);
+
     }
 }
 
