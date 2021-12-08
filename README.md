@@ -15,8 +15,37 @@ Now you should be looking at a visual representation of your graph.
 from now on, all the interactions with the app will be done through the GUI.
 </p>
 
-<h2>Editing the graph</h2>
+<h3>Editing the graph</h3>
 
+![image](https://user-images.githubusercontent.com/74304423/145213867-65247f39-aa98-463a-8203-e546787c2710.png)
+You can change the graph components (Nodes and edges) via the "Edit" tab, all changes will be shown immediatly at the screen.
+changes can be save via the "File" tab
+
+<h3>Graph Algorithms</h3>
+
+  ![image](https://user-images.githubusercontent.com/74304423/145225953-fe86dfe1-3990-4652-b1d0-5e9c17a0e78e.png)
+
+  
+The calculator provides several operations(algorithms) to run on the graph.
+
+<ul>
+  <li><strong>Is connected: </strong> check if the graph is <strong>strongly connected</strong></li>
+  <li><strong>Shortest path dist: </strong>get a source and destination nodes from the user and return the distance of the shortest path between them</li>
+  <li><strong>Shortest path: </strong>get a source and destination nodes from the user and color all the edges of the path with Black (default is red)</li>
+  <li><strong>Center: </strong>Mark the Center node of the graph</li>
+  <li><strong>Tsp-Traveling salesmen problem: </strong>The calculator receives a list of nodes and returns the shortest path it can find that traverse them all. The user should insert the nodes id separated by comma.</li>
+</ul>
+
+<h2>The algorithms behind the scenes</h2>
  
- 
+ <ul>
+  <li> <strong> Is connected:</strong> Using BFS, we "color" the graph vertices with white, black, and gray starting from an arbitrary node. after The BFS is done we look for white nodes, if no white node is found it means that there is a path from the source node to any other node in the graph. However, this does not guarantee connectivity since we deal we directed graph, so we recolor the nodes with white, reverse all the edges and perform another BFS. 
+if again we can't find white nodes then the graph is <strong>Strongly connected</strong>  </li>
+  <li> <strong> </strong></li>
+  <li> <strong> </strong></li>
+  <li> <strong> </strong></li>
+  <li> <strong> </strong></li>
+  
+  </ul>
+     
 
