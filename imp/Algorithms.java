@@ -5,9 +5,11 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class Algorithms implements DirectedWeightedGraphAlgorithms {
@@ -213,9 +215,15 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public boolean save(String file) {
-        Gson g = new Gson();
+
+        Gson gson = new GsonBuilder().create();
+
         try {
-            g.toJson(graph, new FileWriter(file));
+            Writer writer = new FileWriter(file);
+            gson.toJson(graph, writer);
+            writer.flush(); //flush data to file   <---
+            writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -229,13 +237,14 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
         Gson g = new Gson();
         try {
-            DirectedWeightedGraph d =g.fromJson(file, DirectedWeightedGraph.class);
+            Digraph d =new Digraph(file);
             this.init(d);
         }
         catch (Exception e){
             e.printStackTrace();
             return false;
         }
+
         return true;
     }
 

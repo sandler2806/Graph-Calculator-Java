@@ -1,6 +1,7 @@
 package src;
 
 import api.DirectedWeightedGraph;
+import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import imp.Algorithms;
@@ -19,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Window2 extends JFrame implements ActionListener {
-    Algorithms algorithms=new Algorithms();
+    DirectedWeightedGraphAlgorithms algorithms;
     DirectedWeightedGraph graph;
     double max_x=Double.MIN_VALUE,min_x=Double.MAX_VALUE,max_y=Double.MIN_VALUE,min_y=Double.MAX_VALUE;
     private final int kRADIUS = 3;
@@ -30,11 +31,12 @@ public class Window2 extends JFrame implements ActionListener {
     double scalelog,scalelat;
 
 
-    public Window2() throws IOException {
+    public Window2(DirectedWeightedGraphAlgorithms alg) {
+        algorithms=alg;
         initGUI();
     }
 
-    private void initGUI() throws IOException {
+    private void initGUI() {
 
         this.setSize(mWin_w, mWin_h);
         this.setResizable(false);
@@ -45,6 +47,7 @@ public class Window2 extends JFrame implements ActionListener {
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
+
         MenuBar menuBar = new MenuBar();
         this.setMenuBar(menuBar);
         Menu menu = new Menu("Menu");
@@ -95,13 +98,31 @@ public class Window2 extends JFrame implements ActionListener {
         algorithms.add(shortestPath);
         algorithms.add(center);
         algorithms.add(tsp);
+//        mBuffer_image = createImage(mWin_w, mWin_h);
+//
+//        paint(this.getGraphics());
+//        showGraph();
     }
 
     @Override
     public void paintComponents(Graphics g) {
-        if(algorithms.getGraph()==null)return;
         graph=algorithms.getGraph();
-        Iterator<NodeData>nodeDataIterator= graph.nodeIter();
+        Iterator<NodeData> nodeDataIterator = graph.nodeIter();
+        max_x=Double.MIN_VALUE;
+        min_x=Double.MAX_VALUE;
+        max_y=Double.MIN_VALUE;
+        min_y=Double.MAX_VALUE;
+        while (nodeDataIterator.hasNext()) {
+            NodeData nodeData = nodeDataIterator.next();
+            double x = nodeData.getLocation().x(), y = nodeData.getLocation().y();
+            if (max_x < x) max_x = x;
+            if (max_y < y) max_y = y;
+            if (min_x > x) min_x = x;
+            if (min_y > y) min_y = y;
+        }
+        scalelog = (mWin_w - 100) / ((max_x - min_x));
+        scalelat = (mWin_h - 100) / ((max_y - min_y));
+        nodeDataIterator= graph.nodeIter();
         Iterator<EdgeData>edgeDataIterator=graph.edgeIter();
         while (nodeDataIterator.hasNext()){
             NodeData nodeData=nodeDataIterator.next();
