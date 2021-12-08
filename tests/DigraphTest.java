@@ -95,7 +95,7 @@ class DigraphTest {
     @Test
     void testEdgeIter() {
 
-        Iterator<Edge> ed = graph.edgeIter(0);
+        Iterator<EdgeData> ed = graph.edgeIter(0);
 
         while(ed.hasNext()){
             EdgeData e = ed.next();

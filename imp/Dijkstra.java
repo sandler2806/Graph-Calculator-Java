@@ -1,6 +1,7 @@
 package imp;
 
 import api.DirectedWeightedGraph;
+import api.EdgeData;
 import api.NodeData;
 
 import java.io.IOException;
@@ -12,9 +13,7 @@ public class Dijkstra {
     DirectedWeightedGraph graph;
 
     public Dijkstra(DirectedWeightedGraph g){
-        Algorithms alg = new Algorithms();
-        alg.init(g);
-        graph = alg.copy();
+        graph = g;
 
     }
 
@@ -29,7 +28,7 @@ public class Dijkstra {
     }
 
 
-    HashMap<Integer,Double>[] shp(int src){
+    public HashMap<Integer,Double>[] shp(int src){
 
         HashMap<Integer,Double> dist = new HashMap<>();
         HashMap<Integer,Double> prev = new HashMap<>();
@@ -57,9 +56,9 @@ public class Dijkstra {
         while(!que.isEmpty()){
 
             FibonacciHeap.Entry<Integer> min = que.dequeueMin();
-            Iterator<Edge> nei = graph.edgeIter(min.getValue());
+            Iterator<EdgeData> nei = graph.edgeIter(min.getValue());
             while(nei.hasNext()){
-                Edge e = nei.next();
+                EdgeData e = nei.next();
                 double alt = dist.get(e.getSrc()) + e.getWeight();
                 if( alt < dist.get(e.getDest())){
                     dist.put(e.getDest(), alt);

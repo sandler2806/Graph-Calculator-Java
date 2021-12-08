@@ -1,11 +1,9 @@
 package tests;
 
+import api.EdgeData;
 import api.NodeData;
-import imp.Algorithms;
-import imp.Digraph;
-import imp.Location;
-import imp.Node;
-import org.junit.jupiter.api.BeforeEach;
+import imp.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,18 +13,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class AlgorithmsTest {
 
-    Algorithms algorithms=new Algorithms();
-    Algorithms algorithms1=new Algorithms();
-    Algorithms algorithms2=new Algorithms();
-    Algorithms algorithms3=new Algorithms();
-    Algorithms algorithms1000=new Algorithms();
-    Algorithms algorithms10000=new Algorithms();
-    Algorithms algorithms10000n=new Algorithms();
+    static Algorithms algorithms=new Algorithms();
+    static Algorithms algorithms1=new Algorithms();
+    static Algorithms algorithms2=new Algorithms();
+    static Algorithms algorithms3=new Algorithms();
+    static Algorithms algorithms1000=new Algorithms();
+    static Algorithms algorithms10000=new Algorithms();
+    static Algorithms algorithms10000n=new Algorithms();
 
-    @BeforeEach
-    public void start() throws IOException {
+    @BeforeAll
+    static void start() throws IOException {
         algorithms.init(new Digraph("data/Gtest.json"));
         algorithms1.init(new Digraph("data/G1.json"));
         algorithms2.init(new Digraph("data/G2.json"));
@@ -40,10 +39,10 @@ class AlgorithmsTest {
 
     @Test
     void init() throws IOException {
-//        algorithms.init(new Digraph("data/Gtest.json"));
-//        algorithms1.init(new Digraph("data/G1.json"));
-//        algorithms2.init(new Digraph("data/G2.json"));
-//        algorithms3.init(new Digraph("data/G3.json"));
+        algorithms.init(new Digraph("data/Gtest.json"));
+        algorithms1.init(new Digraph("data/G1.json"));
+        algorithms2.init(new Digraph("data/G2.json"));
+        algorithms3.init(new Digraph("data/G3.json"));
     }
 
     @Test
@@ -95,6 +94,7 @@ class AlgorithmsTest {
         assertEquals(algorithms1000.center().getKey(),362);
 //        assertEquals(algorithms10000.center().getKey(),3846);
 
+
     }
 
     @Test
@@ -117,15 +117,14 @@ class AlgorithmsTest {
         nodes.add(algorithms.getGraph().getNode(4));
 //        assertEquals(algorithms.tsp(nodes).toString(),"[Node{id=1}, Node{id=4}, Node{id=5}, Node{id=2}, Node{id=3}, Node{id=5}, Node{id=6}]");
         nodes.clear();
-        for (int i = 0; i < 500; i++) {
-            nodes.add(algorithms1000.getGraph().getNode(i*2));
+        for (int i = 0; i < 100; i++) {
+            nodes.add(algorithms1000.getGraph().getNode(i*10));
         }
         List<NodeData>ans=algorithms1000.tsp(nodes);
         System.out.println(ans);
         System.out.println(ans.size());
         System.out.println(calculator(algorithms1000,ans,nodes));
         System.out.println(algorithms1000.getGraph().edgeSize());
-
     }
 
     @Test
@@ -133,6 +132,7 @@ class AlgorithmsTest {
         Algorithms alg = new Algorithms();
         alg.load("data/Gtest.json");
         alg.save("data/newG.json");
+
     }
 
     @Test
@@ -141,6 +141,12 @@ class AlgorithmsTest {
         Algorithms alg = new Algorithms();
         alg.load("data/Gtest.json");
         alg.load("data/G1.json");
+
+        Iterator<EdgeData>edgeDataIterator=algorithms.getGraph().edgeIter(5);
+//        algorithms.getGraph().removeEdge(5,6);
+        while (edgeDataIterator.hasNext()){
+            EdgeData edgeData=edgeDataIterator.next();
+        }
     }
     public static double calculator(Algorithms algorithm,List<NodeData>ans,List<NodeData>citis){
         double dist=0;

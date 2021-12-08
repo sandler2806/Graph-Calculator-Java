@@ -1,15 +1,13 @@
 package imp;
 
-import api.DirectedWeightedGraph;
-import api.DirectedWeightedGraphAlgorithms;
-import api.EdgeData;
-import api.NodeData;
+import api.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class Algorithms implements DirectedWeightedGraphAlgorithms {
@@ -17,17 +15,8 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     DirectedWeightedGraph graph;
     final int WHITE=0,GRAY=1,BLACK=2;
 
-
-
-
-    public static void main(String[] args) throws IOException {
-
-
-    }
-
     @Override
     public void init(DirectedWeightedGraph g) {
-
         graph = g;
     }
 
@@ -41,8 +30,13 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
         String g ;
         Gson gson = new Gson();
-        g = gson.toJson(graph);
-        Digraph d = gson.fromJson(g, Digraph.class);
+        save("graph");
+        Digraph d=null;
+        try {
+            d=new Digraph("graph");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return d;
     }
 
@@ -90,7 +84,7 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
 
         while (!queue.isEmpty()){
             NodeData node=queue.poll();
-            Iterator<Edge> edgeDataIterator=g.edgeIter(node.getKey());
+            Iterator<EdgeData> edgeDataIterator=g.edgeIter(node.getKey());
             //iterate all his adj
             while (edgeDataIterator.hasNext()){
                 EdgeData edge=edgeDataIterator.next();
@@ -222,11 +216,40 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     @Override
     public boolean save(String file) {
 
-        Gson gson = new GsonBuilder().create();
-
         try {
             Writer writer = new FileWriter(file);
-            gson.toJson(graph, writer);
+            Iterator<NodeData>nodeDataIterator=graph.nodeIter();
+            Iterator<EdgeData>edgeDataIterator=graph.edgeIter();
+            String str="";
+            str+="{\n" +"\"Edges\": [";
+            boolean first=true;
+            while (edgeDataIterator.hasNext()) {
+                EdgeData edgeData = edgeDataIterator.next();
+                if (first){
+                    str += "{\n" + "\"src\": " + edgeData.getSrc() + ",\n" + "\"w\":" + edgeData.getWeight() + ",\n" + "\"dest\":" + edgeData.getDest() + " \n" + "}";
+                }
+                else {
+                    str += ",{\n" + "\"src\": " + edgeData.getSrc() + ",\n" + "\"w\":" + edgeData.getWeight() + ",\n" + "\"dest\":" + edgeData.getDest() + " \n" + "}";
+                }
+                first=false;
+            }
+                str+= "],\n\"Nodes\":[\n";
+                first=true;
+                while (nodeDataIterator.hasNext()){
+                NodeData nodeData = nodeDataIterator.next();
+                GeoLocation l=nodeData.getLocation();
+                if(first){
+                    str+="{\n\"pos\":\""+l.x()+","+l.y()+",0.0\",\"id\":"+nodeData.getKey()+"\n}";
+
+                }
+                else {
+                    str+=",{\n\"pos\":\""+l.x()+","+l.y()+",0.0\",\"id\":"+nodeData.getKey()+"\n}";
+                }
+                first=false;
+            }
+            str+="]}";
+
+            writer.write(str);
             writer.flush(); //flush data to file   <---
             writer.close();
 

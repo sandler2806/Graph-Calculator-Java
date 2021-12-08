@@ -17,7 +17,8 @@ public class Digraph implements DirectedWeightedGraph {
 
     static class container{
         Node node;
-        HashMap<Integer,Edge> outEdges,inEdges;
+        HashMap<Integer,EdgeData> outEdges,inEdges;
+//        HashMap<Integer>
 
         container(NodeData n){
             node = (Node) n;
@@ -25,10 +26,7 @@ public class Digraph implements DirectedWeightedGraph {
         inEdges = new HashMap<>();
         }
     }
-    boolean isIterator = false;
 
-
-//    HashMap<Integer, imp.Node>  nodes = new HashMap<>();
     private HashMap<Integer,container> adjList;
     int edgeNum; // nu
 
@@ -73,12 +71,6 @@ public class Digraph implements DirectedWeightedGraph {
 
     }
 
-    public static void main(String[] args)  {
-
-//        imp.Digraph g = new imp.Digraph("data/G1.json");
-//        System.out.println("");
-    }
-
     @Override
     public NodeData getNode(int key) {
         if(adjList.get(key) == null)
@@ -114,7 +106,7 @@ public class Digraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<NodeData> nodeIter() {
+    public Iterator<NodeData> nodeIter()throws RuntimeException {
 
         ArrayList<NodeData> nodes = new ArrayList<>();
         for(container c : adjList.values())
@@ -124,7 +116,7 @@ public class Digraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<EdgeData> edgeIter() {
+    public Iterator<EdgeData> edgeIter() throws RuntimeException{
         ArrayList<EdgeData> outEdges = new ArrayList<>();
         for (container c : adjList.values())
             outEdges.addAll(c.outEdges.values());
@@ -133,15 +125,13 @@ public class Digraph implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<Edge> edgeIter(int node_id) {
+    public Iterator<EdgeData> edgeIter(int node_id)throws RuntimeException {
 
         return adjList.get(node_id).outEdges.values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-
-        //       int[] in = new int[adjList.get(key).inEdges.size()];
 
         //remove the out edges
         ArrayList<Integer> out = new ArrayList<>(adjList.get(key).outEdges.keySet());
