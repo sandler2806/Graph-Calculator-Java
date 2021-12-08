@@ -118,9 +118,16 @@ class AlgorithmsTest {
 
     @Test
     void save() {
+        Algorithms alg = new Algorithms();
+        alg.load("data/Gtest.json");
+        alg.save("data/newG.json");
     }
 
     @Test
     void load() {
+
+        Algorithms alg = new Algorithms();
+        alg.load("data/Gtest.json");
+        alg.load("data/G1.json");
     }
 }
