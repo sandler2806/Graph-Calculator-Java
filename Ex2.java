@@ -15,8 +15,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGrapg(String json_file) throws IOException {
-        DirectedWeightedGraph ans = new Digraph(json_file);
-        return ans;
+        return new Digraph(json_file);
     }
     /**
      * This static function will be used to test your implementation
@@ -33,13 +32,13 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      *
      */
-    public static void runGUI(String json_file) throws IOException {
+    public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         GUI window = new GUI(alg);
         window.setVisible(true);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         runGUI(args[0]);
     }
 }
