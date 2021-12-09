@@ -217,35 +217,35 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
                 NodeData minNei=null;
                 double minWeight=Double.MAX_VALUE;
 
-                    HashMap<Integer,Double>[] dijkstra;
-                    //
-                    if(dijkstraMap.containsKey(src.getKey())){
-                        dijkstra=dijkstraMap.get(src.getKey());
+                HashMap<Integer,Double>[] dijkstra;
+                //
+                if(dijkstraMap.containsKey(src.getKey())){
+                    dijkstra=dijkstraMap.get(src.getKey());
+                }
+                else {
+                    dijkstra=D.shp(src.getKey());
+                    dijkstraMap.put(src.getKey(),dijkstra);
+                }
+                HashMap<Integer,Double> distance=dijkstra[0];
+                HashMap<Integer,Double> path=dijkstra[1];
+                for (NodeData nodeData:citiesMap.values()){
+                    if(distance.get(nodeData.getKey())<minWeight){
+                        minNei=nodeData;
+                        minWeight=distance.get(nodeData.getKey());
                     }
-                    else {
-                        dijkstra=D.shp(src.getKey());
-                        dijkstraMap.put(src.getKey(),dijkstra);
-                    }
-                    HashMap<Integer,Double> distance=dijkstra[0];
-                    HashMap<Integer,Double> path=dijkstra[1];
-                    for (NodeData nodeData:citiesMap.values()){
-                        if(distance.get(nodeData.getKey())<minWeight){
-                            minNei=nodeData;
-                            minWeight=distance.get(nodeData.getKey());
-                        }
-                    }
+                }
                 assert minNei != null;
                 dist+=distance.get(minNei.getKey());
-                    ans.add(graph.getNode((minNei.getKey())));
-                    citiesMap.remove(minNei.getKey());
-                    double node=path.get((minNei.getKey()));
-                    int size=ans.size()-1;
-                    while (node!=src.getKey()){
-                        ans.add(size,graph.getNode((int)node));
-                        citiesMap.remove((int)node);
-                        node=path.get((int)node);
-                    }
-                    src=minNei;
+                ans.add(graph.getNode((minNei.getKey())));
+                citiesMap.remove(minNei.getKey());
+                double node=path.get((minNei.getKey()));
+                int size=ans.size()-1;
+                while (node!=src.getKey()){
+                    ans.add(size,graph.getNode((int)node));
+                    citiesMap.remove((int)node);
+                    node=path.get((int)node);
+                }
+                src=minNei;
 
             }
             if(dist<minDist){
@@ -281,9 +281,9 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
                 }
                 first=false;
             }
-                str.append("],\n\"Nodes\":[\n");
-                first=true;
-                while (nodeDataIterator.hasNext()){
+            str.append("],\n\"Nodes\":[\n");
+            first=true;
+            while (nodeDataIterator.hasNext()){
                 NodeData nodeData = nodeDataIterator.next();
                 GeoLocation l=nodeData.getLocation();
                 if(first){
