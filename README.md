@@ -57,6 +57,10 @@ if again we can't find white nodes then the graph is <strong>Strongly connected<
   <br>
   Using the new implementation, we managed to greatly improve our complexity cutting between 70 to 80 percent of the running time. 
   
+  <h2>UML diagram</h2>
+  
+  ![image](https://user-images.githubusercontent.com/74304423/145448408-17f76957-da58-466b-b8db-abb712777f2f.png)
+
   
 </p>
 <h2> Running time analysis </h2>
@@ -70,6 +74,7 @@ if again we can't find white nodes then the graph is <strong>Strongly connected<
   <br>
   <strong> nodes to visit </strong> = we look for a path containing all these nodes. <br>
   In graphs bigger than 100,000 nodes some of the heavier algorithms run out of memory. 
+  <strong>The code was executed on a 5-year-old laptop, on a newer machine the results would be way better </strong>
   
 </p>
 
