@@ -5,7 +5,7 @@ import api.NodeData;
 
 public class Node implements NodeData {
 
-    private int id;
+    private final int id;
     private Location pos;
     private int tag;
 
@@ -53,7 +53,7 @@ public class Node implements NodeData {
 
     @Override
     public String getInfo() {
-        return null;
+        return toString();
     }
 
     @Override
@@ -67,8 +67,5 @@ public class Node implements NodeData {
     }
 
     @Override
-    public void setTag(int t) {
-
-        tag = t;
-    }
+    public void setTag(int t) {tag = t;}
 }

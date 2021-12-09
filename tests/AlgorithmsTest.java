@@ -1,6 +1,5 @@
 package tests;
 
-import api.EdgeData;
 import api.NodeData;
 import imp.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +53,7 @@ class AlgorithmsTest {
     }
 
     @Test
-    void isConnected() throws IOException {
+    void isConnected() {
         assertTrue(algorithms.isConnected());
         assertTrue(algorithms1.isConnected());
         assertTrue(algorithms2.isConnected());
@@ -87,10 +85,10 @@ class AlgorithmsTest {
 
     @Test
     void center() {
-//        assertEquals(algorithms.center().getKey(),4);
-//        assertEquals(algorithms1.center().getKey(),8);
-//        assertEquals(algorithms2.center().getKey(),0);
-//        assertEquals(algorithms3.center().getKey(),40);
+        assertEquals(algorithms.center().getKey(),4);
+        assertEquals(algorithms1.center().getKey(),8);
+        assertEquals(algorithms2.center().getKey(),0);
+        assertEquals(algorithms3.center().getKey(),40);
         assertEquals(algorithms1000.center().getKey(),362);
 //        assertEquals(algorithms10000.center().getKey(),3846);
 
@@ -115,16 +113,16 @@ class AlgorithmsTest {
         nodes.add(algorithms.getGraph().getNode(6));
         nodes.add(algorithms.getGraph().getNode(3));
         nodes.add(algorithms.getGraph().getNode(4));
-//        assertEquals(algorithms.tsp(nodes).toString(),"[Node{id=1}, Node{id=4}, Node{id=5}, Node{id=2}, Node{id=3}, Node{id=5}, Node{id=6}]");
-        nodes.clear();
-        for (int i = 0; i < 100; i++) {
-            nodes.add(algorithms1000.getGraph().getNode(i*10));
-        }
-        List<NodeData>ans=algorithms1000.tsp(nodes);
-        System.out.println(ans);
-        System.out.println(ans.size());
-        System.out.println(calculator(algorithms1000,ans,nodes));
-        System.out.println(algorithms1000.getGraph().edgeSize());
+        assertEquals(algorithms.tsp(nodes).toString(),"[Node{id=6}, Node{id=5}, Node{id=2}, Node{id=3}, Node{id=5}, Node{id=2}, Node{id=4}, Node{id=1}]");
+//        nodes.clear();
+//        for (int i = 0; i < 100; i++) {
+//            nodes.add(algorithms1000.getGraph().getNode(i*10));
+//        }
+//        List<NodeData>ans=algorithms1000.tsp(nodes);
+//        System.out.println(ans);
+//        System.out.println(ans.size());
+//        System.out.println(calculator(algorithms1000,ans,nodes));
+//        System.out.println(algorithms1000.getGraph().edgeSize());
     }
 
     @Test
@@ -142,11 +140,6 @@ class AlgorithmsTest {
         alg.load("data/Gtest.json");
         alg.load("data/G1.json");
 
-        Iterator<EdgeData>edgeDataIterator=algorithms.getGraph().edgeIter(5);
-//        algorithms.getGraph().removeEdge(5,6);
-        while (edgeDataIterator.hasNext()){
-            EdgeData edgeData=edgeDataIterator.next();
-        }
     }
     public static double calculator(Algorithms algorithm,List<NodeData>ans,List<NodeData>citis){
         double dist=0;

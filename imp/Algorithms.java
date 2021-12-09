@@ -1,13 +1,9 @@
 package imp;
 
 import api.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class Algorithms implements DirectedWeightedGraphAlgorithms {
@@ -28,8 +24,6 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     @Override
     public DirectedWeightedGraph copy() {
 
-        String g ;
-        Gson gson = new Gson();
         save("graph");
         Digraph d=null;
         try {
@@ -191,7 +185,8 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
                             minWeight=distance.get(nodeData.getKey());
                         }
                     }
-                    dist+=distance.get(minNei.getKey());
+                assert minNei != null;
+                dist+=distance.get(minNei.getKey());
                     ans.add(graph.getNode((minNei.getKey())));
                     citiesMap.remove(minNei.getKey());
                     double node=path.get((minNei.getKey()));
@@ -220,36 +215,36 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
             Writer writer = new FileWriter(file);
             Iterator<NodeData>nodeDataIterator=graph.nodeIter();
             Iterator<EdgeData>edgeDataIterator=graph.edgeIter();
-            String str="";
-            str+="{\n" +"\"Edges\": [";
+            StringBuilder str= new StringBuilder();
+            str.append("{\n" + "\"Edges\": [");
             boolean first=true;
             while (edgeDataIterator.hasNext()) {
                 EdgeData edgeData = edgeDataIterator.next();
                 if (first){
-                    str += "{\n" + "\"src\": " + edgeData.getSrc() + ",\n" + "\"w\":" + edgeData.getWeight() + ",\n" + "\"dest\":" + edgeData.getDest() + " \n" + "}";
+                    str.append("{\n" + "\"src\": ").append(edgeData.getSrc()).append(",\n").append("\"w\":").append(edgeData.getWeight()).append(",\n").append("\"dest\":").append(edgeData.getDest()).append(" \n").append("}");
                 }
                 else {
-                    str += ",{\n" + "\"src\": " + edgeData.getSrc() + ",\n" + "\"w\":" + edgeData.getWeight() + ",\n" + "\"dest\":" + edgeData.getDest() + " \n" + "}";
+                    str.append(",{\n" + "\"src\": ").append(edgeData.getSrc()).append(",\n").append("\"w\":").append(edgeData.getWeight()).append(",\n").append("\"dest\":").append(edgeData.getDest()).append(" \n").append("}");
                 }
                 first=false;
             }
-                str+= "],\n\"Nodes\":[\n";
+                str.append("],\n\"Nodes\":[\n");
                 first=true;
                 while (nodeDataIterator.hasNext()){
                 NodeData nodeData = nodeDataIterator.next();
                 GeoLocation l=nodeData.getLocation();
                 if(first){
-                    str+="{\n\"pos\":\""+l.x()+","+l.y()+",0.0\",\"id\":"+nodeData.getKey()+"\n}";
+                    str.append("{\n\"pos\":\"").append(l.x()).append(",").append(l.y()).append(",0.0\",\"id\":").append(nodeData.getKey()).append("\n}");
 
                 }
                 else {
-                    str+=",{\n\"pos\":\""+l.x()+","+l.y()+",0.0\",\"id\":"+nodeData.getKey()+"\n}";
+                    str.append(",{\n\"pos\":\"").append(l.x()).append(",").append(l.y()).append(",0.0\",\"id\":").append(nodeData.getKey()).append("\n}");
                 }
                 first=false;
             }
-            str+="]}";
+            str.append("]}");
 
-            writer.write(str);
+            writer.write(str.toString());
             writer.flush(); //flush data to file   <---
             writer.close();
 
@@ -264,7 +259,6 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
     @Override
     public boolean load(String file) {
 
-        Gson g = new Gson();
         try {
             Digraph d =new Digraph(file);
             this.init(d);

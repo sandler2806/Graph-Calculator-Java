@@ -35,10 +35,8 @@ class NodeTest {
 
     @Test
     void getInfo() {
-    }
-
-    @Test
-    void setInfo() {
+        assertEquals(nodeData.getInfo(),"Node{id=4}");
+        assertEquals(nodeData2.getInfo(),"Node{id=8}");
     }
 
     @Test

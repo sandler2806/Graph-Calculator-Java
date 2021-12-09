@@ -1,7 +1,6 @@
 package imp;
 
 import api.EdgeData;
-import com.google.gson.Gson;
 
 public class Edge implements EdgeData {
 
@@ -36,12 +35,11 @@ public class Edge implements EdgeData {
 
     @Override
     public String getInfo() {
-        return null;
+        return src+","+dest;
     }
 
     @Override
     public void setInfo(String s) {
-
     }
 
     @Override

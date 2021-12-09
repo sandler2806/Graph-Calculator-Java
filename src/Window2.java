@@ -10,7 +10,6 @@ import imp.Node;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
@@ -124,35 +123,9 @@ public class Window2 extends JFrame implements ActionListener {
             g.setColor(Color.RED);
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new BasicStroke(2));
-//            g2.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
-
-
-//            drawArrow(g2,srcX,srcY,destX,destY);
-            drawArrowLine(g2,srcX,srcY,destX,destY,9,9);
-//            Graphics2D g2 = (Graphics2D) g.create();
-//            double dx = srcX - destX, dy = srcY - destY;
-//            double angle = Math.atan2(dy, dx);
-//            int len = (int) Math.sqrt(dx*dx + dy*dy);
-//            AffineTransform at = AffineTransform.getTranslateInstance(srcX, srcY);
-//            at.concatenate(AffineTransform.getRotateInstance(angle));
-//            g2.transform(at);
-//
-//            // Draw horizontal arrow starting in (0, 0)
-//            g2.drawLine((int)srcX, (int)srcY, len, (int)destY);
-//            g2.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
-//                    new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
-
-//            drawArrowLine(g,(int)srcX,(int)srcY,(int)destX,(int)destY,5,5);
-
-
-//            for (int x = 15; x < 200; x += 16)
-//                drawArrow(g, x, x, x, 150);
-//            drawArrow(g, 30, 300, 300, 190);
+            drawArrowLine(g2,srcX,srcY,destX,destY);
         }
         nodeDataIterator= graph.nodeIter();
-        System.out.println("");
-
-
         while (nodeDataIterator.hasNext()){
             NodeData nodeData=nodeDataIterator.next();
             g.setColor(Color.BLUE);
@@ -212,55 +185,42 @@ public class Window2 extends JFrame implements ActionListener {
                 this.setVisible(true);
 
                 myTextField finalWeight = weight;
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        int srcText = Integer.parseInt(src.getText());
-                        int destText = Integer.parseInt(dest.getText());
-                        if (str.equals("Add edge")) {
-                            if (graph.getNode(srcText) == null || graph.getNode(destText) == null) {
-                                container.removeAll();
-                                Graphics g = getGraphics();
-                                g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                                container.setLayout(new FlowLayout());
+                okButton.addActionListener(e1 -> {
+                    int srcText = Integer.parseInt(src.getText());
+                    int destText = Integer.parseInt(dest.getText());
+                    if (str.equals("Add edge")) {
+                        if (graph.getNode(srcText) == null || graph.getNode(destText) == null) {
+                            container.removeAll();
+                            Graphics g = getGraphics();
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
 
-                                myJButton graphButton = new myJButton("Return to graph");
-                                myJLabel distLabel = new myJLabel("One of the nodes does not exist");
-                                container.add(distLabel);
-                                container.add(graphButton);
-                                setVisible(true);
-                                graphButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        showGraph();
-                                    }
-                                });
-                            } else {
-                                double weightText = Double.parseDouble(finalWeight.getText());
-                                graph.connect(srcText, destText, weightText);
-                                showGraph();
-                            }
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("One of the nodes does not exist");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            graphButton.addActionListener(e11 -> showGraph());
                         } else {
-                            if (graph.getEdge(srcText, destText) == null) {
-                                container.removeAll();
-                                Graphics g = getGraphics();
-                                g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                                container.setLayout(new FlowLayout());
-                                myJButton graphButton = new myJButton("Return to graph");
-                                myJLabel distLabel = new myJLabel("The edge does not exist");
-                                container.add(distLabel);
-                                container.add(graphButton);
-                                setVisible(true);
-                                graphButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        showGraph();
-                                    }
-                                });
-                            } else {
-                                graph.removeEdge(srcText, destText);
-                                showGraph();
-                            }
+                            double weightText = Double.parseDouble(finalWeight.getText());
+                            graph.connect(srcText, destText, weightText);
+                            showGraph();
+                        }
+                    } else {
+                        if (graph.getEdge(srcText, destText) == null) {
+                            container.removeAll();
+                            Graphics g = getGraphics();
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("The edge does not exist");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            graphButton.addActionListener(e112 -> showGraph());
+                        } else {
+                            graph.removeEdge(srcText, destText);
+                            showGraph();
                         }
                     }
                 });
@@ -294,56 +254,43 @@ public class Window2 extends JFrame implements ActionListener {
 
                 myTextField finalGeoLat = geoLat;
                 myTextField finalGeoLog = geoLog;
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        int id = Integer.parseInt(node.getText());
-                        if (str.equals("Add node")) {
-                            if (graph.getNode(id) != null) {
-                                container.removeAll();
-                                Graphics g = getGraphics();
-                                g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                                container.setLayout(new FlowLayout());
+                okButton.addActionListener(e12 -> {
+                    int id = Integer.parseInt(node.getText());
+                    if (str.equals("Add node")) {
+                        if (graph.getNode(id) != null) {
+                            container.removeAll();
+                            Graphics g = getGraphics();
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
 
-                                myJButton graphButton = new myJButton("Return to graph");
-                                myJLabel distLabel = new myJLabel("The nodes does not exist");
-                                container.add(distLabel);
-                                container.add(graphButton);
-                                setVisible(true);
-                                graphButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        showGraph();
-                                    }
-                                });
-                            } else {
-                                String lat = finalGeoLat.getText();
-                                String log = finalGeoLog.getText();
-                                graph.addNode(new Node(id, new Location(log + "," + lat + ",0.0")));
-                                showGraph();
-                            }
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("The nodes does not exist");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            graphButton.addActionListener(e121 -> showGraph());
                         } else {
-                            if (graph.getNode(id) == null) {
-                                container.removeAll();
-                                Graphics g = getGraphics();
-                                g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                                container.setLayout(new FlowLayout());
+                            String lat = finalGeoLat.getText();
+                            String log = finalGeoLog.getText();
+                            graph.addNode(new Node(id, new Location(log + "," + lat + ",0.0")));
+                            showGraph();
+                        }
+                    } else {
+                        if (graph.getNode(id) == null) {
+                            container.removeAll();
+                            Graphics g = getGraphics();
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
 
-                                myJButton graphButton = new myJButton("Return to graph");
-                                myJLabel distLabel = new myJLabel("The node already exist");
-                                container.add(distLabel);
-                                container.add(graphButton);
-                                setVisible(true);
-                                graphButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        showGraph();
-                                    }
-                                });
-                            } else {
-                                graph.removeNode(id);
-                                showGraph();
-                            }
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("The node already exist");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            graphButton.addActionListener(e1212 -> showGraph());
+                        } else {
+                            graph.removeNode(id);
+                            showGraph();
                         }
                     }
                 });
@@ -357,13 +304,10 @@ public class Window2 extends JFrame implements ActionListener {
                 container.add(name);
                 container.add(okButton);
                 this.setVisible(true);
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String file = name.getText();
-                        algorithms.save(file + ".json");
-                        showGraph();
-                    }
+                okButton.addActionListener(e13 -> {
+                    String file = name.getText();
+                    algorithms.save(file + ".json");
+                    showGraph();
                 });
             }
             case "Load" -> {
@@ -382,7 +326,7 @@ public class Window2 extends JFrame implements ActionListener {
             }
             case "Is connected" -> {
 
-                myJLabel connected = null;
+                myJLabel connected;
                 if (algorithms.isConnected()) {
                     connected = new myJLabel("The graph is connected");
                 } else {
@@ -392,12 +336,7 @@ public class Window2 extends JFrame implements ActionListener {
                 container.add(connected);
                 container.add(graphButton);
                 this.setVisible(true);
-                graphButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        showGraph();
-                    }
-                });
+                graphButton.addActionListener(e14 -> showGraph());
             }
             case "Shortest path dist" -> {
                 myTextField src = new myTextField();
@@ -413,33 +352,25 @@ public class Window2 extends JFrame implements ActionListener {
                 container.add(okButton);
                 this.setVisible(true);
 
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        container.removeAll();
-                        Graphics g = getGraphics();
-                        g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                        container.setLayout(new FlowLayout());
-                        myJButton graphButton = new myJButton("Return to graph");
-                        int srcText = Integer.parseInt(src.getText());
-                        int destText = Integer.parseInt(dest.getText());
-                        String dist = "";
-                        if (graph.getNode(srcText) != null && graph.getNode(destText) != null) {
-                            dist = "" + algorithms.shortestPathDist(srcText, destText);
-                        } else {
-                            dist = "One of the nodes does not exist";
-                        }
-                        myJLabel distLabel = new myJLabel("" + dist);
-                        container.add(distLabel);
-                        container.add(graphButton);
-                        setVisible(true);
-                        graphButton.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                showGraph();
-                            }
-                        });
+                okButton.addActionListener(e15 -> {
+                    container.removeAll();
+                    Graphics g = getGraphics();
+                    g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                    container.setLayout(new FlowLayout());
+                    myJButton graphButton = new myJButton("Return to graph");
+                    int srcText = Integer.parseInt(src.getText());
+                    int destText = Integer.parseInt(dest.getText());
+                    String dist;
+                    if (graph.getNode(srcText) != null && graph.getNode(destText) != null) {
+                        dist = "" + algorithms.shortestPathDist(srcText, destText);
+                    } else {
+                        dist = "One of the nodes does not exist";
                     }
+                    myJLabel distLabel = new myJLabel("" + dist);
+                    container.add(distLabel);
+                    container.add(graphButton);
+                    setVisible(true);
+                    graphButton.addActionListener(e151 -> showGraph());
                 });
             }
             case "Shortest path" -> {
@@ -456,51 +387,43 @@ public class Window2 extends JFrame implements ActionListener {
                 container.add(okButton);
                 this.setVisible(true);
 
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        int srcText = Integer.parseInt(src.getText());
-                        int destText = Integer.parseInt(dest.getText());
+                okButton.addActionListener(e16 -> {
+                    int srcText = Integer.parseInt(src.getText());
+                    int destText = Integer.parseInt(dest.getText());
 
-                        container.removeAll();
-                        Graphics g = getGraphics();
-                        g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                        container.setLayout(new FlowLayout());
+                    container.removeAll();
+                    Graphics g = getGraphics();
+                    g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                    container.setLayout(new FlowLayout());
 
-                        if (graph.getNode(srcText) == null || graph.getNode(destText) == null) {
-                            myJButton graphButton = new myJButton("Return to graph");
-                            myJLabel distLabel = new myJLabel("One of the nodes does not exist");
-                            container.add(distLabel);
-                            container.add(graphButton);
-                            setVisible(true);
-                            graphButton.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    showGraph();
-                                }
-                            });
-                        } else {
+                    if (graph.getNode(srcText) == null || graph.getNode(destText) == null) {
+                        myJButton graphButton = new myJButton("Return to graph");
+                        myJLabel distLabel = new myJLabel("One of the nodes does not exist");
+                        container.add(distLabel);
+                        container.add(graphButton);
+                        setVisible(true);
+                        graphButton.addActionListener(e161 -> showGraph());
+                    } else {
 
-                            List<NodeData> nodeDataList = algorithms.shortestPath(srcText, destText);
-                            mBuffer_image = createImage(mWin_w, mWin_h);
-                            mBuffer_graphics = mBuffer_image.getGraphics();
-                            // Draw on the new "canvas"
-                            paintComponents(mBuffer_graphics);
-                            mBuffer_graphics.setColor(Color.black);
-                            for (int i = 0; i < nodeDataList.size() - 1; i++) {
-                                EdgeData edgeData = graph.getEdge(nodeDataList.get(i).getKey(), nodeDataList.get(i + 1).getKey());
-                                double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                                double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                                mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
-                            }
-                            container.removeAll();
-                            container.setLayout(new FlowLayout());
-                            // "Switch" the old "canvas" for the new one
-                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
-
+                        List<NodeData> nodeDataList = algorithms.shortestPath(srcText, destText);
+                        mBuffer_image = createImage(mWin_w, mWin_h);
+                        mBuffer_graphics = mBuffer_image.getGraphics();
+                        // Draw on the new "canvas"
+                        paintComponents(mBuffer_graphics);
+                        mBuffer_graphics.setColor(Color.black);
+                        for (int i = 0; i < nodeDataList.size() - 1; i++) {
+                            EdgeData edgeData = graph.getEdge(nodeDataList.get(i).getKey(), nodeDataList.get(i + 1).getKey());
+                            double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
                         }
+                        container.removeAll();
+                        container.setLayout(new FlowLayout());
+                        // "Switch" the old "canvas" for the new one
+                        g.drawImage(mBuffer_image, 0, 0, imageObserver);
+
                     }
                 });
             }
@@ -514,6 +437,7 @@ public class Window2 extends JFrame implements ActionListener {
                 double Y = (nodeData.getLocation().y() - min_y) * (scalelat) + 50;
                 mBuffer_graphics.fillOval((int) X, (int) Y, 2 * kRADIUS, 2 * kRADIUS);
                 mBuffer_graphics.setColor(Color.black);
+                mBuffer_graphics.setFont(new Font("Serif", Font.BOLD, 16));
                 mBuffer_graphics.drawString("center is " + nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
                 // "Switch" the old "canvas" for the new one
                 g.drawImage(mBuffer_image, 0, 0, this);
@@ -530,34 +454,14 @@ public class Window2 extends JFrame implements ActionListener {
                 container.add(okButton);
                 this.setVisible(true);
 
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        boolean error = false;
-                        String[] nodesL = nodes.getText().split(",");
-                        List<NodeData> nodeDataList = new ArrayList<>();
-                        for (String node : nodesL) {
-                            try {
-                                nodeDataList.add(graph.getNode(Integer.parseInt(node)));
-                                if (graph.getNode(Integer.parseInt(node)) == null) {
-                                    container.removeAll();
-                                    Graphics g = getGraphics();
-                                    g.drawImage(mBuffer_image, 0, 0, imageObserver);
-                                    container.setLayout(new FlowLayout());
-
-                                    myJButton graphButton = new myJButton("Return to graph");
-                                    myJLabel distLabel = new myJLabel("One of the nodes does not exist");
-                                    container.add(distLabel);
-                                    container.add(graphButton);
-                                    setVisible(true);
-                                    graphButton.addActionListener(new ActionListener() {
-                                        @Override
-                                        public void actionPerformed(ActionEvent e) {
-                                            showGraph();
-                                        }
-                                    });
-                                }
-                            } catch (Exception exception) {
+                okButton.addActionListener(e17 -> {
+                    boolean error = false;
+                    String[] nodesL = nodes.getText().split(",");
+                    List<NodeData> nodeDataList = new ArrayList<>();
+                    for (String node : nodesL) {
+                        try {
+                            nodeDataList.add(graph.getNode(Integer.parseInt(node)));
+                            if (graph.getNode(Integer.parseInt(node)) == null) {
                                 container.removeAll();
                                 Graphics g = getGraphics();
                                 g.drawImage(mBuffer_image, 0, 0, imageObserver);
@@ -568,37 +472,44 @@ public class Window2 extends JFrame implements ActionListener {
                                 container.add(distLabel);
                                 container.add(graphButton);
                                 setVisible(true);
-                                error = true;
-                                graphButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        showGraph();
-                                    }
-                                });
+                                graphButton.addActionListener(e171 -> showGraph());
                             }
-
-                        }
-                        if (!error) {
-                            List<NodeData> ans = algorithms.tsp(nodeDataList);
-                            mBuffer_image = createImage(mWin_w, mWin_h);
-                            mBuffer_graphics = mBuffer_image.getGraphics();
-                            Graphics g = getGraphics();
-                            // Draw on the new "canvas"
-                            paintComponents(mBuffer_graphics);
-                            mBuffer_graphics.setColor(Color.black);
-                            for (int i = 0; i < ans.size() - 1; i++) {
-                                EdgeData edgeData = graph.getEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
-                                double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                                double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                                mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
-                            }
+                        } catch (Exception exception) {
                             container.removeAll();
-                            container.setLayout(new FlowLayout());
-                            // "Switch" the old "canvas" for the new one
+                            Graphics g = getGraphics();
                             g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
+
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("One of the nodes does not exist");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            error = true;
+                            graphButton.addActionListener(e1712 -> showGraph());
                         }
+
+                    }
+                    if (!error) {
+                        List<NodeData> ans = algorithms.tsp(nodeDataList);
+                        mBuffer_image = createImage(mWin_w, mWin_h);
+                        mBuffer_graphics = mBuffer_image.getGraphics();
+                        Graphics g = getGraphics();
+                        // Draw on the new "canvas"
+                        paintComponents(mBuffer_graphics);
+                        mBuffer_graphics.setColor(Color.black);
+                        for (int i = 0; i < ans.size() - 1; i++) {
+                            EdgeData edgeData = graph.getEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
+                            double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
+                        }
+                        container.removeAll();
+                        container.setLayout(new FlowLayout());
+                        // "Switch" the old "canvas" for the new one
+                        g.drawImage(mBuffer_image, 0, 0, imageObserver);
                     }
                 });
             }
@@ -637,10 +548,10 @@ public class Window2 extends JFrame implements ActionListener {
             this.setFont(new Font("Serif", Font.PLAIN, 14));
         }
     }
-    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2) {
         int dx = x2 - x1, dy = y2 - y1;
         double D = Math.sqrt(dx * dx + dy * dy);
-        double xm = D - d, xn = xm, ym = h, yn = -h, x;
+        double xm = D - 9, xn = xm, ym = 9, yn = -9, x;
         double sin = dy / D, cos = dx / D;
 
         x = xm * cos - ym * sin + x1;
@@ -665,23 +576,8 @@ public class Window2 extends JFrame implements ActionListener {
         g.setColor(Color.black);
         g.fillPolygon(xpoints, ypoints, 3);
 
-    }void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
-        Graphics2D g = (Graphics2D) g1.create();
-
-        double dx = x2 - x1, dy = y2 - y1;
-        double angle = Math.atan2(dy, dx);
-        int len = (int) Math.sqrt(dx*dx + dy*dy);
-        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
-        at.concatenate(AffineTransform.getRotateInstance(angle));
-        g.transform(at);
-
-        // Draw horizontal arrow starting in (0, 0)
-        g.drawLine(0, 0, len, 0);
-        g.setColor(Color.black);
-        int ARR_SIZE = 4;
-        g.fillPolygon(new int[] {len, len- ARR_SIZE, len- ARR_SIZE, len},
-                new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
     }
+
     void setScale(){
         graph=algorithms.getGraph();
         Iterator<NodeData> nodeDataIterator = graph.nodeIter();

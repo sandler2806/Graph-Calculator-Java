@@ -13,32 +13,36 @@ import java.util.Map;
 
 public class Digraph implements DirectedWeightedGraph {
 
-    int mc;
-
     static class container{
         Node node;
         HashMap<Integer,EdgeData> outEdges,inEdges;
-//        HashMap<Integer>
-
         container(NodeData n){
             node = (Node) n;
         outEdges = new HashMap<>();
         inEdges = new HashMap<>();
+
         }
     }
 
-    private HashMap<Integer,container> adjList;
+    int mc;
+    private final HashMap<String,EdgeData> edges;
+    private final HashMap<Integer,NodeData> nodes;
+    private final HashMap<Integer,container> adjList;
     int edgeNum; // nu
 
     //empty constructor
     public Digraph(){
         mc = 0;
         adjList=new HashMap<>();
+        edges=new HashMap<>();
+        nodes=new HashMap<>();
     }
 
     public Digraph(String path) throws IOException {
         mc = 0;
         adjList = new HashMap<>();
+        edges=new HashMap<>();
+        nodes=new HashMap<>();
 
         Gson g = new Gson();
         //read the json file into map
@@ -51,6 +55,7 @@ public class Digraph implements DirectedWeightedGraph {
             Location l=new Location(""+x.get("pos"));
             Node node=new Node(id,l);
             adjList.put(id,new container(node));
+            nodes.put(node.getKey(),node);
 
         }
         //insert the edges
@@ -60,13 +65,12 @@ public class Digraph implements DirectedWeightedGraph {
             int dest=((Double)x.get("dest")).intValue();
             double w= (Double) x.get("w");
 
-            Edge edge=new Edge(src,w,dest);
+            EdgeData edge=new Edge(src,w,dest);
             //add to source node
             adjList.get(src).outEdges.put(dest,edge);
             //add to the destination node
             adjList.get(dest).inEdges.put(src,edge);
-
-
+            edges.put(src+","+dest,edge);
         }
 
     }
@@ -91,6 +95,7 @@ public class Digraph implements DirectedWeightedGraph {
     public void addNode(NodeData n) {
 
         adjList.put(n.getKey(),new container(n));
+        nodes.put(n.getKey(),n);
         mc++;
     }
 
@@ -100,6 +105,7 @@ public class Digraph implements DirectedWeightedGraph {
             return;
 
         adjList.get(src).outEdges.put(dest, new Edge(src, w, dest));
+        edges.put(src+","+dest,new Edge(src, w, dest));
         edgeNum++;
         mc++;
 
@@ -108,20 +114,13 @@ public class Digraph implements DirectedWeightedGraph {
     @Override
     public Iterator<NodeData> nodeIter()throws RuntimeException {
 
-        ArrayList<NodeData> nodes = new ArrayList<>();
-        for(container c : adjList.values())
-            nodes.add(c.node);
-
-        return nodes.iterator();
+        return nodes.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() throws RuntimeException{
-        ArrayList<EdgeData> outEdges = new ArrayList<>();
-        for (container c : adjList.values())
-            outEdges.addAll(c.outEdges.values());
 
-        return outEdges.iterator();
+        return edges.values().iterator();
     }
 
     @Override
@@ -144,6 +143,7 @@ public class Digraph implements DirectedWeightedGraph {
         //remove in edges
 
         adjList.remove(key);
+        nodes.remove(key);
         mc++;
         return null;
     }
@@ -153,11 +153,11 @@ public class Digraph implements DirectedWeightedGraph {
 
         EdgeData d = adjList.get(src).outEdges.remove(dest) ;
         adjList.get(dest).inEdges.remove(src);
+        edges.remove(src+","+dest);
         if(d!=null){
             edgeNum--;
             mc++;
         }
-
         return d;
     }
 
@@ -175,8 +175,5 @@ public class Digraph implements DirectedWeightedGraph {
     public int getMC() {
         return mc;
     }
-
-    public HashMap<Integer,container> getAdjList(){return adjList;}
-
 
 }
