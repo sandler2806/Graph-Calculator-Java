@@ -4,7 +4,6 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -14,16 +13,6 @@ public class Dijkstra {
 
     public Dijkstra(DirectedWeightedGraph g){
         graph = g;
-
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        Digraph d = new Digraph("data/Gtest.json");
-        Dijkstra sp = new Dijkstra(d);
-        HashMap<Integer,Double>[] hs = sp.shp(3);
-        System.out.println("");
-
 
     }
 

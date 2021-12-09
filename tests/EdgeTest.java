@@ -35,9 +35,9 @@ class EdgeTest {
 
     @Test
     void getInfo() {
+        assertEquals(edgeData.getInfo(),"0,8");
+        assertEquals(edgeData2.getInfo(),"8,5");
+        assertEquals(edgeData3.getInfo(),"0,4");
     }
 
-    @Test
-    void setInfo() {
-    }
 }

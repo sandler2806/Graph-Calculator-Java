@@ -29,5 +29,7 @@ class LocationTest {
 
     @Test
     void distance() {
+        assertEquals(location.distance(location2),0.8062257748298567);
+        assertEquals(location2.distance(location),0.8062257748298567);
     }
 }

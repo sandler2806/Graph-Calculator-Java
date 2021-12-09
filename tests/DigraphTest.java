@@ -4,7 +4,6 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 import imp.Digraph;
-import imp.Edge;
 import imp.Location;
 import imp.Node;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,14 +26,13 @@ class DigraphTest {
 
     }
 
-
-
     @Test
     void getNode() {
 
         assertEquals(graph.getNode(0).getKey(), 0);
         assertEquals(graph.getNode(5).getKey(), 5);
-
+        assertEquals(graph.getNode(8).getKey(), 8);
+        assertEquals(graph.getNode(2).getKey(), 2);
 
     }
 
@@ -118,15 +116,36 @@ class DigraphTest {
     @Test
     void removeEdge() {
 
-//        graph.()
+        graph.removeEdge(0,1);
+        graph.removeEdge(2,6);
+        graph.removeEdge(5,4);
+        assertNull(graph.getEdge(0,1));
+        assertNull(graph.getEdge(2,6));
+        assertNull(graph.getEdge(5,4));
 
     }
 
     @Test
     void nodeSize() {
+        assertEquals(graph.nodeSize(),17);
+        graph.removeNode(0);
+        assertEquals(graph.nodeSize(),16);
+        graph.removeNode(1);
+        assertEquals(graph.nodeSize(),15);
+        graph.addNode(new Node(0,new Location("32.123,34.12,0.0")));
+        assertEquals(graph.nodeSize(),16);
     }
 
     @Test
     void edgeSize() {
+        assertEquals(graph.edgeSize(),36);
+        graph.removeEdge(0,1);
+        assertEquals(graph.edgeSize(),35);
+        graph.removeEdge(2,6);
+        assertEquals(graph.edgeSize(),34);
+        graph.removeEdge(5,4);
+        assertEquals(graph.edgeSize(),33);
+        graph.connect(5,4,3);
+        assertEquals(graph.edgeSize(),34);
     }
 }
