@@ -234,7 +234,7 @@ public class Algorithms implements DirectedWeightedGraphAlgorithms {
                         minWeight=distance.get(nodeData.getKey());
                     }
                 }
-                assert minNei != null;
+                if(minNei==null)return null;
                 dist+=distance.get(minNei.getKey());
                 ans.add(graph.getNode((minNei.getKey())));
                 citiesMap.remove(minNei.getKey());

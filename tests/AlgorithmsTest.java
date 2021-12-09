@@ -131,6 +131,14 @@ class AlgorithmsTest {
         nodes.add(algorithms.getGraph().getNode(3));
         nodes.add(algorithms.getGraph().getNode(4));
         assertEquals(algorithms.tsp(nodes).toString(),"[Node{id=6}, Node{id=5}, Node{id=2}, Node{id=3}, Node{id=5}, Node{id=2}, Node{id=4}, Node{id=1}]");
+
+        nodes.clear();
+        algorithms1.getGraph().removeNode(1);
+        algorithms1.getGraph().removeNode(15);
+        nodes.add(algorithms1.getGraph().getNode(16));
+        nodes.add(algorithms1.getGraph().getNode(14));
+        assertNull(algorithms1.tsp(nodes));
+
     }
 
     @Test

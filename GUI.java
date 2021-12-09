@@ -265,7 +265,7 @@ public class GUI extends JFrame implements ActionListener {
                             container.setLayout(new FlowLayout());
 
                             myJButton graphButton = new myJButton("Return to graph");
-                            myJLabel distLabel = new myJLabel("The nodes does not exist");
+                            myJLabel distLabel = new myJLabel("The node already exist");
                             container.add(distLabel);
                             container.add(graphButton);
                             setVisible(true);
@@ -284,7 +284,7 @@ public class GUI extends JFrame implements ActionListener {
                             container.setLayout(new FlowLayout());
 
                             myJButton graphButton = new myJButton("Return to graph");
-                            myJLabel distLabel = new myJLabel("The node already exist");
+                            myJLabel distLabel = new myJLabel("The node does not exist");
                             container.add(distLabel);
                             container.add(graphButton);
                             setVisible(true);
@@ -430,18 +430,35 @@ public class GUI extends JFrame implements ActionListener {
             }
             case "Center" -> {
                 NodeData nodeData = algorithms.center();
-                Graphics g = this.getGraphics();
-                // Draw on the new "canvas"
-                paintComponents(mBuffer_graphics);
-                mBuffer_graphics.setColor(Color.green);
-                double X = (nodeData.getLocation().x() - min_x) * (scalelog) + 50;
-                double Y = (nodeData.getLocation().y() - min_y) * (scalelat) + 50;
-                mBuffer_graphics.fillOval((int) X, (int) Y, 2 * kRADIUS, 2 * kRADIUS);
-                mBuffer_graphics.setColor(Color.black);
-                mBuffer_graphics.setFont(new Font("Serif", Font.BOLD, 16));
-                mBuffer_graphics.drawString("center is " + nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
-                // "Switch" the old "canvas" for the new one
-                g.drawImage(mBuffer_image, 0, 0, this);
+                if(nodeData!=null){
+                    Graphics g = this.getGraphics();
+                    // Draw on the new "canvas"
+                    paintComponents(mBuffer_graphics);
+                    mBuffer_graphics.setColor(Color.green);
+                    double X = (nodeData.getLocation().x() - min_x) * (scalelog) + 50;
+                    double Y = (nodeData.getLocation().y() - min_y) * (scalelat) + 50;
+                    mBuffer_graphics.fillOval((int) X, (int) Y, 2 * kRADIUS, 2 * kRADIUS);
+                    mBuffer_graphics.setColor(Color.black);
+                    mBuffer_graphics.setFont(new Font("Serif", Font.BOLD, 16));
+                    mBuffer_graphics.drawString("center is " + nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
+                    // "Switch" the old "canvas" for the new one
+                    g.drawImage(mBuffer_image, 0, 0, this);
+                }
+                else
+                {
+                    container.removeAll();
+                    Graphics g = getGraphics();
+                    g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                    container.setLayout(new FlowLayout());
+
+                    myJButton graphButton = new myJButton("Return to graph");
+                    myJLabel distLabel = new myJLabel("There is no center");
+                    container.add(distLabel);
+                    container.add(graphButton);
+                    setVisible(true);
+                    graphButton.addActionListener(e1712 -> showGraph());
+                }
+
             }
             case "Tsp" -> {
                 myTextField nodes = new myTextField();
@@ -493,24 +510,39 @@ public class GUI extends JFrame implements ActionListener {
                     }
                     if (!error) {
                         List<NodeData> ans = algorithms.tsp(nodeDataList);
-                        mBuffer_image = createImage(mWin_w, mWin_h);
-                        mBuffer_graphics = mBuffer_image.getGraphics();
-                        Graphics g = getGraphics();
-                        // Draw on the new "canvas"
-                        paintComponents(mBuffer_graphics);
-                        mBuffer_graphics.setColor(Color.black);
-                        for (int i = 0; i < ans.size() - 1; i++) {
-                            EdgeData edgeData = graph.getEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
-                            double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                            double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
-                            mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
+                        if(ans==null){
+                            container.removeAll();
+                            Graphics g = getGraphics();
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                            container.setLayout(new FlowLayout());
+
+                            myJButton graphButton = new myJButton("Return to graph");
+                            myJLabel distLabel = new myJLabel("There is no path containing all the nodes");
+                            container.add(distLabel);
+                            container.add(graphButton);
+                            setVisible(true);
+                            graphButton.addActionListener(e1712 -> showGraph());
                         }
-                        container.removeAll();
-                        container.setLayout(new FlowLayout());
-                        // "Switch" the old "canvas" for the new one
-                        g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                        else {
+                            mBuffer_image = createImage(mWin_w, mWin_h);
+                            mBuffer_graphics = mBuffer_image.getGraphics();
+                            Graphics g = getGraphics();
+                            // Draw on the new "canvas"
+                            paintComponents(mBuffer_graphics);
+                            mBuffer_graphics.setColor(Color.black);
+                            for (int i = 0; i < ans.size() - 1; i++) {
+                                EdgeData edgeData = graph.getEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
+                                double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                                double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                                double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
+                                double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                                mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
+                            }
+                            container.removeAll();
+                            container.setLayout(new FlowLayout());
+                            // "Switch" the old "canvas" for the new one
+                            g.drawImage(mBuffer_image, 0, 0, imageObserver);
+                        }
                     }
                 });
             }
