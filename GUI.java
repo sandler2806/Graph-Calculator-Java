@@ -1,5 +1,3 @@
-package src;
-
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
@@ -17,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Window2 extends JFrame implements ActionListener {
+public class GUI extends JFrame implements ActionListener {
     DirectedWeightedGraphAlgorithms algorithms;
     DirectedWeightedGraph graph;
     double max_x=Double.MIN_VALUE,min_x=Double.MAX_VALUE,max_y=Double.MIN_VALUE,min_y=Double.MAX_VALUE,scalelog,scalelat;
@@ -28,7 +26,7 @@ public class Window2 extends JFrame implements ActionListener {
     private Graphics mBuffer_graphics;
 
 
-    public Window2(DirectedWeightedGraphAlgorithms alg) {
+    public GUI(DirectedWeightedGraphAlgorithms alg) {
         algorithms=alg;
         initGUI();
     }

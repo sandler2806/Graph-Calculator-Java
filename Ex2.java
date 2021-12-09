@@ -2,9 +2,7 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import imp.Algorithms;
 import imp.Digraph;
-import src.Window2;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -37,7 +35,7 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) throws IOException {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
-        Window2 window = new Window2(alg);
+        GUI window = new GUI(alg);
         window.setVisible(true);
     }
 
