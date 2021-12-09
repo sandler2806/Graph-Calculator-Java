@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class Digraph implements DirectedWeightedGraph {
 
+    //class that hold all the details about a specific node.
     static class container{
         Node node;
         HashMap<Integer,EdgeData> outEdges,inEdges;
@@ -24,11 +25,12 @@ public class Digraph implements DirectedWeightedGraph {
         }
     }
 
-    int mc;
+    int mc;//count the number of changes that was made to the graph
+
     private final HashMap<String,EdgeData> edges;
     private final HashMap<Integer,NodeData> nodes;
-    private final HashMap<Integer,container> adjList;
-    int edgeNum; // nu
+    private final HashMap<Integer,container> adjList; // adjacency list
+    int edgeNum;
 
     //empty constructor
     public Digraph(){
@@ -38,6 +40,7 @@ public class Digraph implements DirectedWeightedGraph {
         nodes=new HashMap<>();
     }
 
+    //constructor that receives path to json file containing a graph
     public Digraph(String path) throws IOException {
         mc = 0;
         adjList = new HashMap<>();
@@ -75,6 +78,11 @@ public class Digraph implements DirectedWeightedGraph {
 
     }
 
+    /**
+     *
+     * @param key - the node_id
+     * @return reference to node, null if not found
+     */
     @Override
     public NodeData getNode(int key) {
         if(adjList.get(key) == null)
@@ -83,6 +91,12 @@ public class Digraph implements DirectedWeightedGraph {
         return adjList.get(key).node;
     }
 
+    /**
+     *
+     * @param src - id of source node
+     * @param dest id of destination node
+     * @return reference to the Edge object, return null if Edge does not exist
+     */
     @Override
     public EdgeData getEdge(int src, int dest) {
         if(adjList.get(src) == null)
@@ -91,6 +105,9 @@ public class Digraph implements DirectedWeightedGraph {
         return adjList.get(src).outEdges.get(dest);
     }
 
+    /**
+     * @param n - a node object
+     */
     @Override
     public void addNode(NodeData n) {
 
@@ -99,6 +116,12 @@ public class Digraph implements DirectedWeightedGraph {
         mc++;
     }
 
+    /**
+     *
+     * @param src - the source of the edge.
+     * @param dest - the destination of the edge.
+     * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
+     */
     @Override
     public void connect(int src, int dest, double w) {
         if(!adjList.containsKey(src) || !adjList.containsKey(dest))
@@ -111,27 +134,46 @@ public class Digraph implements DirectedWeightedGraph {
 
     }
 
+    /**
+     * @return iterator containing all the nodes in the graph
+     * @throws RuntimeException
+     */
     @Override
     public Iterator<NodeData> nodeIter()throws RuntimeException {
 
         return nodes.values().iterator();
     }
 
+    /**
+     * @return iterator containing all the Edges in the graph
+     * @throws RuntimeException
+     */
     @Override
     public Iterator<EdgeData> edgeIter() throws RuntimeException{
 
         return edges.values().iterator();
     }
 
+    /**
+     * @param node_id  -
+     * @return Iterator that iterate over all the Edges of the given node
+     * @throws RuntimeException
+     */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id)throws RuntimeException {
 
         return adjList.get(node_id).outEdges.values().iterator();
     }
 
+    /**
+     *
+     * @param key - the id of the node we want to remove
+     * @return the node that was removed, null if non removed
+     */
     @Override
     public NodeData removeNode(int key) {
 
+        NodeData n = adjList.get(key).node;
         //remove the out edges
         ArrayList<Integer> out = new ArrayList<>(adjList.get(key).outEdges.keySet());
         ArrayList<Integer> in = new ArrayList<>(adjList.get(key).inEdges.keySet());
@@ -145,9 +187,15 @@ public class Digraph implements DirectedWeightedGraph {
         adjList.remove(key);
         nodes.remove(key);
         mc++;
-        return null;
+        return n;
     }
 
+    /**
+     *
+     * @param src - the id of the source node
+     * @param dest - the id of the destination node
+     * @return the removed edge, null if non was removed
+     */
     @Override
     public EdgeData removeEdge(int src, int dest) {
 

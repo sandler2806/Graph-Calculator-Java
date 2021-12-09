@@ -115,9 +115,9 @@ public class GUI extends JFrame implements ActionListener {
         while (edgeDataIterator.hasNext()){
             EdgeData edgeData=edgeDataIterator.next();
             int srcX =(int) ((graph.getNode(edgeData.getSrc()).getLocation().x()-min_x)*(scalelog)+50+kRADIUS);
-            int srcY =(int) ((graph.getNode(edgeData.getSrc()).getLocation().y()-min_y)*(scalelat)+50+kRADIUS);
+            int srcY =(int) ((graph.getNode(edgeData.getSrc()).getLocation().y()-min_y)*(scalelat)+70+kRADIUS);
             int destX =(int) ((graph.getNode(edgeData.getDest()).getLocation().x()-min_x)*(scalelog)+50+kRADIUS);
-            int destY =(int) ((graph.getNode(edgeData.getDest()).getLocation().y()-min_y)*(scalelat)+50+kRADIUS);
+            int destY =(int) ((graph.getNode(edgeData.getDest()).getLocation().y()-min_y)*(scalelat)+70+kRADIUS);
             g.setColor(Color.RED);
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new BasicStroke(2));
@@ -128,8 +128,11 @@ public class GUI extends JFrame implements ActionListener {
             NodeData nodeData=nodeDataIterator.next();
             g.setColor(Color.BLUE);
             double X = (nodeData.getLocation().x()-min_x)*(scalelog)+50;
-            double Y = (nodeData.getLocation().y()-min_y)*(scalelat)+50;
+            double Y = (nodeData.getLocation().y()-min_y)*(scalelat)+70;
             g.fillOval((int) X, (int)Y,2 * kRADIUS, 2 * kRADIUS);
+            g.setColor(Color.black);
+            g.setFont(new Font("Serif", Font.BOLD, 16));
+            g.drawString(""+nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
         }
     }
 
@@ -549,7 +552,7 @@ public class GUI extends JFrame implements ActionListener {
     private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2) {
         int dx = x2 - x1, dy = y2 - y1;
         double D = Math.sqrt(dx * dx + dy * dy);
-        double xm = D - 9, xn = xm, ym = 9, yn = -9, x;
+        double xm = D - 7, xn = xm, ym = 7, yn = -7, x;
         double sin = dy / D, cos = dx / D;
 
         x = xm * cos - ym * sin + x1;
@@ -595,4 +598,3 @@ public class GUI extends JFrame implements ActionListener {
         scalelat = (mWin_h - 100) / ((max_y - min_y));
     }
 }
-

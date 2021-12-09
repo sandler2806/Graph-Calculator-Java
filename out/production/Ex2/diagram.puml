@@ -1,0 +1,86 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Digraph
+class Node
+class Edge
+class Algorithms
+class Dijkstra
+class FibonacciHeap
+class Location
+class GUI
+class container
+
+
+
+Digraph --|> Node
+Digraph --|> Edge
+Digraph --|> container
+container --|> Node
+container --|> Edge
+Node --|> Location
+Algorithms --|> Digraph
+Algorithms --|> Dijkstra
+Dijkstra --|> FibonacciHeap
+GUI --|> Algorithms
+
+
+class Node {
+-Location
+-tag
+-id
++getters()
++setters()
+
+}
+class Algorithms{
++Digraph graph
++isConnected()
++center()
++shortestDistPath()
++shortestPath()
++tsp()
++Load()
++save()
+
+}
+class Edge{
+-int source
+-int destination
+-double weight
++getters()
++setters()
+
+}
+
+class Digraph{
+-HashMap<Integer,container> adjacencyList
+-int mc
++getNode()
++getEdge()
++removeNode()
++removeEdge()
++addNode()
++addEdge()
++connect()
++iterNode()
++iterEdge()
+}
+
+
+class Location {
+-double x
+-double y
+-double z
++getters()
+}
+
+class container{
++Node node
++HashMap outEdges
++HashMap inEdges
+}
+
+
+
+@enduml
