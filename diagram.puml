@@ -24,6 +24,11 @@ Algorithms --|> Dijkstra
 Dijkstra --|> FibonacciHeap
 GUI --|> Algorithms
 
+class Dijkstra{
++DirectedWeightedGraph graph
++shp()
+}
+
 
 class Node {
 -Location
