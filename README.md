@@ -67,9 +67,10 @@ if again we can't find white nodes then the graph is <strong>Strongly connected<
 <p> 
   We tested the algorithms on graphs with rising number of nodes to see how efficient they are.
   
-  ![55c353d8-7465-461e-8b23-6c3a125bf2e7](https://user-images.githubusercontent.com/74304423/145439095-71939c51-776a-4ead-aa85-dbd912be3c42.jpg)
-  
-  ![4364dec4-54b3-42cb-9d3f-5981b86efb1b](https://user-images.githubusercontent.com/74304423/145439795-a2047648-172f-433b-9f4e-556760e6f7c5.jpg)
+![image](https://user-images.githubusercontent.com/91602396/145709328-cc12aa47-34d6-4950-96ab-93990ffcce8f.png)
+
+  ![image](https://user-images.githubusercontent.com/91602396/145709354-5d49b3bc-9d85-4493-8a93-bb7df28f80d4.png)
+
   
   <br>
   <strong> nodes to visit </strong> = we look for a path containing all these nodes. <br>
