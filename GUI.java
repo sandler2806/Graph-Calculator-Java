@@ -415,9 +415,9 @@ public class GUI extends JFrame implements ActionListener {
                         for (int i = 0; i < nodeDataList.size() - 1; i++) {
                             EdgeData edgeData = graph.getEdge(nodeDataList.get(i).getKey(), nodeDataList.get(i + 1).getKey());
                             double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 70 + kRADIUS;
                             double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                            double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 70 + kRADIUS;
                             mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
                         }
                         container.removeAll();
@@ -436,11 +436,11 @@ public class GUI extends JFrame implements ActionListener {
                     paintComponents(mBuffer_graphics);
                     mBuffer_graphics.setColor(Color.green);
                     double X = (nodeData.getLocation().x() - min_x) * (scalelog) + 50;
-                    double Y = (nodeData.getLocation().y() - min_y) * (scalelat) + 50;
+                    double Y = (nodeData.getLocation().y() - min_y) * (scalelat) + 70;
                     mBuffer_graphics.fillOval((int) X, (int) Y, 2 * kRADIUS, 2 * kRADIUS);
                     mBuffer_graphics.setColor(Color.black);
                     mBuffer_graphics.setFont(new Font("Serif", Font.BOLD, 16));
-                    mBuffer_graphics.drawString("center is " + nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
+                    mBuffer_graphics.drawString("   center is " + nodeData.getKey(), (int) X + kRADIUS, (int) Y - kRADIUS);
                     // "Switch" the old "canvas" for the new one
                     g.drawImage(mBuffer_image, 0, 0, this);
                 }
@@ -533,9 +533,9 @@ public class GUI extends JFrame implements ActionListener {
                             for (int i = 0; i < ans.size() - 1; i++) {
                                 EdgeData edgeData = graph.getEdge(ans.get(i).getKey(), ans.get(i + 1).getKey());
                                 double srcX = (graph.getNode(edgeData.getSrc()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                                double srcY = (graph.getNode(edgeData.getSrc()).getLocation().y() - min_y) * (scalelat) + 70 + kRADIUS;
                                 double destX = (graph.getNode(edgeData.getDest()).getLocation().x() - min_x) * (scalelog) + 50 + kRADIUS;
-                                double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 50 + kRADIUS;
+                                double destY = (graph.getNode(edgeData.getDest()).getLocation().y() - min_y) * (scalelat) + 70 + kRADIUS;
                                 mBuffer_graphics.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
                             }
                             container.removeAll();
